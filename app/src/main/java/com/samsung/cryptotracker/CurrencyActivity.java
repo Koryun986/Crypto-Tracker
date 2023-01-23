@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -41,6 +42,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -54,6 +56,12 @@ public class CurrencyActivity extends AppCompatActivity {
     String id;
     ArrayList<JSONObject> data;
     LineChart lineChart;
+    TextView button1Day;
+    TextView button7Day;
+    TextView button1Month;
+    TextView button3Month;
+    TextView backButton;
+    ProgressBar progressBar;
 
 
     @Override
@@ -64,15 +72,51 @@ public class CurrencyActivity extends AppCompatActivity {
         if (extra != null) {
             id = extra.getString("id");
         }
+        progressBar = findViewById(R.id.currency_activity_progress_bar);
+        button1Day = findViewById(R.id.chart_1d);
+        button7Day = findViewById(R.id.chart_7d);
+        button1Month = findViewById(R.id.chart_1m);
+        button3Month = findViewById(R.id.chart_3m);
         icon = findViewById(R.id.coin_icon);
         name = findViewById(R.id.coin_name);
         price = findViewById(R.id.coin_price);
         lineChart = findViewById(R.id.line_chart);
-        lineChart.setDragEnabled(true);
-        lineChart.setScaleEnabled(false);
-        lineChartStyle();
+        backButton = findViewById(R.id.back_button);
+
         Loader loader = new Loader();
         loader.start();
+
+        button1Day.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                chartDayButtonClickListener(view, 1);
+            }
+        });
+        button7Day.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                chartDayButtonClickListener(view, 7);
+            }
+        });
+        button1Month.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                chartDayButtonClickListener(view, 30);
+            }
+        });
+        button3Month.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                chartDayButtonClickListener(view, 90);
+            }
+        });
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 
     class Loader extends Thread {
@@ -96,13 +140,15 @@ public class CurrencyActivity extends AppCompatActivity {
         leftAxis.setEnabled(false);
         xAxis.setDrawGridLines(false);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setEnabled(false);
+        xAxis.setValueFormatter(new TimeValueFormatter());
         xAxis.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.gray));
         lineChart.setDescription(null);
-        lineChart.animateX(3000);
+        lineChart.animateX(2000);
         IMarker marker = new ChartMarker(getApplicationContext(), R.layout.custom_marker_view_layuot);
         lineChart.setMarker(marker);
-
+        lineChart.setFocusable(true);
+        lineChart.setDragEnabled(true);
+        lineChart.setScaleEnabled(false);
     }
 
     private void lineDataSetStyle (LineDataSet set) {
@@ -124,6 +170,7 @@ public class CurrencyActivity extends AppCompatActivity {
     }
 
     private void loadChartData (String url) {
+        progressBar.setVisibility(View.VISIBLE);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
@@ -137,6 +184,7 @@ public class CurrencyActivity extends AppCompatActivity {
                             dataSet.add(set);
                             LineData lineData = new LineData(dataSet);
                             lineChart.setData(lineData);
+                            lineChartStyle();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -149,19 +197,19 @@ public class CurrencyActivity extends AppCompatActivity {
         });
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
+        progressBar.setVisibility(View.GONE);
     }
 
 
 
     private void loadCurrencyData (String url) {
-        ProgressBar progressBar = findViewById(R.id.currency_activity_progress_bar);
         progressBar.setVisibility(View.VISIBLE);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        progressBar.setVisibility(View.GONE);
                         try {
+                            progressBar.setVisibility(View.GONE);
                             JSONArray jsonArray = new JSONArray(response);
                             data = getArrayListFromJSONArray(jsonArray);
                             Picasso.get().load(data.get(0).getString(Constants.CURRENCY_IMAGE)).into(icon);
@@ -201,5 +249,38 @@ public class CurrencyActivity extends AppCompatActivity {
         return aList;
     }
 
+    public void chartDayButtonClickListener(View view, int days) {
 
+        button1Day.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.blue_price));
+        button7Day.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.blue_price));
+        button1Month.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.blue_price));
+        button3Month.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.blue_price));
+
+        switch(days) {
+            case 1:
+                button1Day.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.orange));
+                break;
+            case 7:
+                button7Day.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.orange));
+                break;
+            case 30:
+                button1Month.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.orange));
+                break;
+            case 90:
+                button3Month.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.orange));
+                break;
+        }
+
+        loadChartData(Constants.CURRENCY_CHART(id, days));
+    }
+
+
+    private class TimeValueFormatter extends ValueFormatter {
+        @Override
+        public String getFormattedValue(float value) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
+            String formatedDate = sdf.format(new java.util.Date((long) value));
+            return formatedDate.substring(5,10);
+        }
+    }
 }

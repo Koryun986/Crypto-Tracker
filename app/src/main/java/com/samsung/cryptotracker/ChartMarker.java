@@ -23,9 +23,11 @@ public class ChartMarker extends MarkerView {
 
     @Override
     public void refreshContent(Entry e, Highlight highlight) {
-        java.util.Date time = new java.util.Date((long) e.getX());
-        date.setText(time.toString());
-        value.setText(e.getY() + "$");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String formatedDate = sdf.format(new java.util.Date((long) e.getX()));
+
+        date.setText(formatedDate);
+        value.setText(e.getY() + " $");
         super.refreshContent(e, highlight);
     }
     private MPPointF mOffset;

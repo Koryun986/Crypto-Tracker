@@ -3,7 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/drawable/chart_days_btn_bg.xml" value="0.2265" />
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/drawable/line_chart_gradient.xml" value="0.136" />
+        <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/drawable/line_chart_marker.xml" value="0.2265" />
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/layout/activity_currency.xml" value="0.22826086956521738" />
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/layout/activity_favorites.xml" value="0.22826086956521738" />
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/layout/activity_main.xml" value="0.22826086956521738" />
