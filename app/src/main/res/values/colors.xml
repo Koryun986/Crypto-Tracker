@@ -7,11 +7,12 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="blue_bg">#0C2033</color>
+    <color name="blue_bg">#0F273D</color>
     <color name="blue_price">#9CB3C9</color>
     <color name="red">#D64D96</color>
     <color name="green">#3CD483</color>
     <color name="orange">#D95F14</color>
     <color name="gray">#ADADAD</color>
     <color name="blue_chart_marker">#133453</color>
+    <color name="blue_dark">#0C2033 </color>
 </resources>

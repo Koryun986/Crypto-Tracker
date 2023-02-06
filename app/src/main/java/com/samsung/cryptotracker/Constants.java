@@ -7,7 +7,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class Constants {
-    public static final String API_URL = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&0";
+    public static final String API_URL (String cur) {
+        return "https://api.coingecko.com/api/v3/coins/markets?vs_currency="+cur+"&order=market_cap_desc&0";
+    }
     public static final String CURRENCY_URL (String id) {
         return "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids="+id+"&order=market_cap_desc&sparkline=false";
     }

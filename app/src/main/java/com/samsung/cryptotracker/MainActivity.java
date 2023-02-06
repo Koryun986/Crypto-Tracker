@@ -9,10 +9,12 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,12 +34,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
     ListView listView;
     Toolbar toolbar;
     DBManager dbManager;
     SearchView searchView;
+    Spinner spinner;
+    String[] spinnerValues = {"USD","EUR","RUB"};
+    String defaultCrncy =  "usd";
 
 
     @Override
@@ -45,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         dbManager = new DBManager(getApplicationContext());
+        spinner = findViewById(R.id.spinner);
         listView = findViewById(R.id.listView);
         toolbar = findViewById(R.id.toolBar);
         searchView = findViewById(R.id.search_bar);
@@ -58,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String name) {
                 if(name.length() == 0){
-                    loadJsonFromUrl(Constants.API_URL);
+                    loadJsonFromUrl(Constants.API_URL(defaultCrncy));
                 }else{
                     loadJsonFromUrl(Constants.SEARCH_CURRENCY, name);
                 }
@@ -93,8 +100,22 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, spinnerValues);
+        adapter.setDropDownViewResource(androidx.appcompat.R.layout.support_simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String value = adapterView.getItemAtPosition(i).toString().toLowerCase(Locale.ROOT);
+                defaultCrncy = value;
+                loadJsonFromUrl(Constants.API_URL(defaultCrncy));
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
 
+            }
+        });
 
     }
 
@@ -102,8 +123,9 @@ public class MainActivity extends AppCompatActivity {
     class Loader extends Thread{
         private String url;
         public Loader(){
-            this.url = Constants.API_URL;
+            this.url = Constants.API_URL(defaultCrncy);
         }
+
         @Override
         public void run() {
             super.run();
