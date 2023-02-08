@@ -4,8 +4,7 @@ import static com.samsung.cryptotracker.Constants.getArrayListFromJSONArray;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Looper;
-import android.util.Log;
+
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -20,7 +19,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.Observer;
+
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -29,15 +28,14 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.samsung.cryptotracker.DB.DBManager;
-import com.samsung.cryptotracker.MVVM.CryptoModel;
-import com.samsung.cryptotracker.MVVM.CryptoViewModel;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
+
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
@@ -60,20 +58,7 @@ public class MainActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolBar);
         searchView = findViewById(R.id.search_bar);
         searchView.clearFocus();
-        CryptoViewModel cryptoViewModel = new CryptoViewModel(this);
-        Log.i("a", "bn");
-        cryptoViewModel.getCrypto().observe(this, new Observer<List<CryptoModel>>() {
-            @Override
-            public void onChanged(List<CryptoModel> cryptoModels) {
-                ArrayList<JSONObject> arrayList = new ArrayList<>();
-                for (CryptoModel cryptoModel: cryptoModels) {
-                    arrayList.add(cryptoModel.getCryptoInfo());
-                }
-                Log.i("Log", arrayList.toString());
-                ListAdapter listAdapter = new ListViewAdapter(getApplicationContext(), R.layout.row, R.id.container, arrayList);
-                listView.setAdapter(listAdapter);
-            }
-        });        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String name) {
                 return false;
@@ -105,8 +90,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//        Loader loader = new Loader();
-//        loader.start();
+        Loader loader = new Loader();
+        loader.start();
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -150,55 +135,36 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
     private void loadJsonFromUrl(String url) {
         final ProgressBar progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);
-        CryptoViewModel cryptoViewModel = new CryptoViewModel(this);
-        cryptoViewModel.getCrypto().observe(this, new Observer<List<CryptoModel>>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        progressBar.setVisibility(View.GONE);
+                        try {
+                            JSONArray jsonArray = new JSONArray(response);
+                            ArrayList<JSONObject> item = getArrayListFromJSONArray(jsonArray);
+                            ListAdapter listAdapter = new ListViewAdapter(getApplicationContext(), R.layout.row, R.id.container, item);
+                            listView.setAdapter(listAdapter);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
             @Override
-            public void onChanged(List<CryptoModel> cryptoModels) {
-                ArrayList<JSONObject> arrayList = new ArrayList<>();
-                for (CryptoModel cryptoModel: cryptoModels) {
-                    arrayList.add(cryptoModel.getCryptoInfo());
-                }
-                Log.i("Log", arrayList.toString());
-                ListAdapter listAdapter = new ListViewAdapter(getApplicationContext(), R.layout.row, R.id.container, arrayList);
-                listView.setAdapter(listAdapter);
+            public void onErrorResponse(VolleyError error) {
+                progressBar.setVisibility(View.GONE);
+                error.printStackTrace();
             }
         });
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
         dbManager.closeDb();
     }
-
-
-//    private void loadJsonFromUrl(String url) {
-//        final ProgressBar progressBar = findViewById(R.id.progressBar);
-//        progressBar.setVisibility(View.VISIBLE);
-//        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-//                new Response.Listener<String>() {
-//                    @Override
-//                    public void onResponse(String response) {
-//                        progressBar.setVisibility(View.GONE);
-//                        try {
-//                            JSONArray jsonArray = new JSONArray(response);
-//                            ArrayList<JSONObject> item = getArrayListFromJSONArray(jsonArray);
-//                            ListAdapter listAdapter = new ListViewAdapter(getApplicationContext(), R.layout.row, R.id.container, item);
-//                            listView.setAdapter(listAdapter);
-//
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                progressBar.setVisibility(View.GONE);
-//                error.printStackTrace();
-//            }
-//        });
-//        RequestQueue requestQueue = Volley.newRequestQueue(this);
-//        requestQueue.add(stringRequest);
-//        dbManager.closeDb();
-//    }
 
     private void loadJsonFromUrl(String url, String name) {
         final ProgressBar progressBar = findViewById(R.id.progressBar);
