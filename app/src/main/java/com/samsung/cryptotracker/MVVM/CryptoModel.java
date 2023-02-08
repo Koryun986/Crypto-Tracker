@@ -1,5 +1,4 @@
 package com.samsung.cryptotracker.MVVM;
-
 import org.json.JSONObject;
 
 public class CryptoModel {
