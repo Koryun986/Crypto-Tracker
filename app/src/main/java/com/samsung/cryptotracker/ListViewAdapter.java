@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.samsung.cryptotracker.DB.DBManager;
+import com.samsung.cryptotracker.Exchange.ExchangedCurrency;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -56,6 +57,22 @@ public class ListViewAdapter extends ArrayAdapter<JSONObject> {
         TextView coinPrice = listViewItem.findViewById(R.id.coin_price);
         TextView coinChange = listViewItem.findViewById(R.id.coin_change);
         TextView favCoin = listViewItem.findViewById(R.id.coin_favorite);
+
+        String exchangedCurrency = ExchangedCurrency.exchangedCurrency;
+        String exchangedCurrencySymbol = "";
+        switch(exchangedCurrency) {
+            case "usd":
+                exchangedCurrencySymbol = "$";
+                break;
+            case "rub":
+                exchangedCurrencySymbol = "₽";
+                break;
+            case "eur":
+                exchangedCurrencySymbol = "€";
+                break;
+            default:
+        }
+
         if (!obj.get(position).has("large")) {
             try {
                 String name = obj.get(position).getString(Constants.CURRENCY_ID);
@@ -63,7 +80,7 @@ public class ListViewAdapter extends ArrayAdapter<JSONObject> {
                 double change = obj.get(position).getDouble(Constants.CURRENCY_MARKET_CUP_CHANGE);
                 Picasso.get().load(obj.get(position).getString(Constants.CURRENCY_IMAGE)).into(icon);
                 coinName.setText(obj.get(position).getString(Constants.CURRENCY_NAME));
-                coinPrice.setText(obj.get(position).getDouble(Constants.CURRENCY_PRICE) + "$");
+                coinPrice.setText(obj.get(position).getDouble(Constants.CURRENCY_PRICE) + exchangedCurrencySymbol);
                 coinChange.setText(change + "%");
                 coinChange.setTextColor(change >= 0 ? ContextCompat.getColor(context, R.color.green) : ContextCompat.getColor(context, R.color.red));
                 List<String> list = dbManager.getFromDb();

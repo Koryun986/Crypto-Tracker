@@ -28,6 +28,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.samsung.cryptotracker.DB.DBManager;
+import com.samsung.cryptotracker.Exchange.ExchangedCurrency;
 
 
 import org.json.JSONArray;
@@ -45,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
     SearchView searchView;
     Spinner spinner;
     String[] spinnerValues = {"USD","EUR","RUB"};
-    String defaultCrncy =  "usd";
 
 
     @Override
@@ -57,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
         listView = findViewById(R.id.listView);
         toolbar = findViewById(R.id.toolBar);
         searchView = findViewById(R.id.search_bar);
+        ExchangedCurrency exchangedCurrency = new ExchangedCurrency();
+
+//        Toolbar
         searchView.clearFocus();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -67,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String name) {
                 if(name.length() == 0){
-                    loadJsonFromUrl(Constants.API_URL(defaultCrncy));
+                    loadJsonFromUrl();
                 }else{
                     loadJsonFromUrl(Constants.SEARCH_CURRENCY, name);
                 }
@@ -102,6 +105,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+//        Spinner Exchanged Currency
         ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, spinnerValues);
         adapter.setDropDownViewResource(androidx.appcompat.R.layout.support_simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
@@ -109,8 +114,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 String value = adapterView.getItemAtPosition(i).toString().toLowerCase(Locale.ROOT);
-                defaultCrncy = value;
-                loadJsonFromUrl(Constants.API_URL(defaultCrncy));
+                ExchangedCurrency.exchangedCurrency = value;
+                loadJsonFromUrl();
             }
 
             @Override
@@ -123,21 +128,18 @@ public class MainActivity extends AppCompatActivity {
 
 
     class Loader extends Thread{
-        private String url;
-        public Loader(){
-            this.url = Constants.API_URL(defaultCrncy);
-        }
 
         @Override
         public void run() {
             super.run();
-            loadJsonFromUrl(url);
+            loadJsonFromUrl();
         }
     }
 
 
-    private void loadJsonFromUrl(String url) {
+    private void loadJsonFromUrl() {
         final ProgressBar progressBar = findViewById(R.id.progressBar);
+        String url = Constants.API_URL();
         progressBar.setVisibility(View.VISIBLE);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
