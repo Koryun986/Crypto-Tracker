@@ -117,6 +117,8 @@ public class CurrencyActivity extends AppCompatActivity {
         }
     }
 
+    // Chart
+
     private void lineChartStyle () {
         XAxis xAxis = lineChart.getXAxis();
         YAxis leftAxis = lineChart.getAxisLeft();
@@ -202,7 +204,7 @@ public class CurrencyActivity extends AppCompatActivity {
                             data = getArrayListFromJSONArray(jsonArray);
                             Picasso.get().load(data.get(0).getString(Constants.CURRENCY_IMAGE)).into(icon);
                             name.setText(data.get(0).getString(Constants.CURRENCY_NAME));
-                            price.setText(data.get(0).getString(Constants.CURRENCY_PRICE) + "$");
+                            price.setText("$" + data.get(0).getString(Constants.CURRENCY_PRICE) );
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
