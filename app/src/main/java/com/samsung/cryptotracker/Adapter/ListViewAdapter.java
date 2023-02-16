@@ -1,4 +1,4 @@
-package com.samsung.cryptotracker;
+package com.samsung.cryptotracker.Adapter;
 
 
 import android.content.Context;
@@ -17,8 +17,10 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
+import com.samsung.cryptotracker.Constants;
 import com.samsung.cryptotracker.DB.DBManager;
 import com.samsung.cryptotracker.Exchange.ExchangedCurrency;
+import com.samsung.cryptotracker.R;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;

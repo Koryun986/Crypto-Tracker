@@ -6,8 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
@@ -23,6 +21,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.samsung.cryptotracker.Adapter.ListViewAdapter;
 import com.samsung.cryptotracker.DB.DBManager;
 
 import org.json.JSONArray;
@@ -41,7 +40,7 @@ public class FavoritesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorites);
-        listView = findViewById(R.id.listView);
+        listView = findViewById(R.id.list_view);
         toolbar = findViewById(R.id.toolBar);
 
         toolbar.getChildAt(0).setOnClickListener(new View.OnClickListener() {

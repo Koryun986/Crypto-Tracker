@@ -1,6 +1,6 @@
 package com.samsung.cryptotracker;
 
-import static com.samsung.cryptotracker.Constants.getArrayListFromJSONArray;
+ import static com.samsung.cryptotracker.Constants.getArrayListFromJSONArray;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -27,6 +27,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.samsung.cryptotracker.Adapter.ListViewAdapter;
 import com.samsung.cryptotracker.DB.DBManager;
 import com.samsung.cryptotracker.Exchange.ExchangedCurrency;
 
@@ -54,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         dbManager = new DBManager(getApplicationContext());
         spinner = findViewById(R.id.spinner);
-        listView = findViewById(R.id.listView);
+        listView = findViewById(R.id.list_view);
         toolbar = findViewById(R.id.toolBar);
         searchView = findViewById(R.id.search_bar);
         ExchangedCurrency exchangedCurrency = new ExchangedCurrency();
