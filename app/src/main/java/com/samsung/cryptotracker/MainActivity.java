@@ -7,7 +7,8 @@ import android.os.Bundle;
 
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
+ import android.view.WindowManager;
+ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -47,10 +48,6 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity {
     ListView listView;
     Toolbar toolbar;
-    DBManager dbManager;
-    SearchView searchView;
-    Spinner spinner;
-    String[] spinnerValues = {"USD","EUR","RUB"};
     BottomNavigationView navigationView;
 
 
@@ -58,60 +55,29 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        dbManager = new DBManager(getApplicationContext());
-        spinner = findViewById(R.id.spinner);
         listView = findViewById(R.id.list_view);
         toolbar = findViewById(R.id.toolBar);
-        searchView = findViewById(R.id.search_bar);
         navigationView = findViewById(R.id.bottom_navigation_bar);
-        ExchangedCurrency exchangedCurrency = new ExchangedCurrency();
+        MarketFragment marketFragment = new MarketFragment();
+        FavoritesFragment favoritesFragment = new FavoritesFragment();
 
-//        Toolbar
-        searchView.clearFocus();
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String name) {
-                return false;
-            }
+//        Fragment
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment, marketFragment)
+                .commit();
 
-            @Override
-            public boolean onQueryTextChange(String name) {
-                if(name.length() == 0){
-                    loadJsonFromUrl();
-                }else{
-                    loadJsonFromUrl(Constants.SEARCH_CURRENCY, name);
-                }
-
-                return true;
-            }
-        });
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.favorites:
-                        Intent intent = new Intent(getApplicationContext(), FavoritesActivity.class);
-                        startActivity(intent);
-                        break;
-                    default:
-                        break;
-                }
-                return false;
-            }
-        });
 
 //        Navigation View
-
         navigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 switch (item.getItemId()) {
                     case R.id.market:
+                        ft.replace(R.id.fragment, marketFragment);
+                        ft.commit();
                         break;
                     case R.id.favorites:
-                        listView.setVisibility(View.GONE);
-                        FavoritesFragment favoritesFragment = new FavoritesFragment();
                         ft.replace(R.id.fragment, favoritesFragment);
                         ft.commit();
                         break;
@@ -124,108 +90,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        Loader loader = new Loader();
-        loader.start();
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                TextView id = view.findViewById(R.id.coin_id);
-                Intent intent = new Intent(getApplicationContext(), CurrencyActivity.class);
-                intent.putExtra("id", id.getText());
-                startActivity(intent);
-            }
-        });
-
-//        Spinner Exchanged Currency
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, spinnerValues);
-        adapter.setDropDownViewResource(androidx.appcompat.R.layout.support_simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String value = adapterView.getItemAtPosition(i).toString().toLowerCase(Locale.ROOT);
-                ExchangedCurrency.exchangedCurrency = value;
-                loadJsonFromUrl();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-
     }
 
 
-    class Loader extends Thread{
 
-        @Override
-        public void run() {
-            super.run();
-            loadJsonFromUrl();
-        }
-    }
-
-
-    private void loadJsonFromUrl() {
-        final ProgressBar progressBar = findViewById(R.id.progressBar);
-        String url = Constants.API_URL();
-        progressBar.setVisibility(View.VISIBLE);
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        progressBar.setVisibility(View.GONE);
-                        try {
-                            JSONArray jsonArray = new JSONArray(response);
-                            ArrayList<JSONObject> item = getArrayListFromJSONArray(jsonArray);
-                            ListAdapter listAdapter = new ListViewAdapter(getApplicationContext(), R.layout.row, R.id.container, item);
-                            listView.setAdapter(listAdapter);
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                progressBar.setVisibility(View.GONE);
-                error.printStackTrace();
-            }
-        });
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(stringRequest);
-        dbManager.closeDb();
-    }
-
-    private void loadJsonFromUrl(String url, String name) {
-        final ProgressBar progressBar = findViewById(R.id.progressBar);
-        progressBar.setVisibility(View.VISIBLE);
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url + name,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        progressBar.setVisibility(View.GONE);
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            ArrayList<JSONObject> item = getArrayListFromJSONArray(jsonObject.getJSONArray("coins"));
-                            ListAdapter listAdapter = new ListViewAdapter(getApplicationContext(), R.layout.row, R.id.container, item);
-                            listView.setAdapter(listAdapter);
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                progressBar.setVisibility(View.GONE);
-                error.printStackTrace();
-            }
-        });
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(stringRequest);
-        dbManager.closeDb();
-    }
 }

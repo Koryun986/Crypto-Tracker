@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".FavoritesFragment"
+    tools:context=".MarketFragment"
     android:orientation="vertical">
 
     <LinearLayout
@@ -38,17 +37,20 @@
             android:layout_weight="1"
             android:text="24h change" />
     </LinearLayout>
+
     <ListView
         android:id="@+id/list_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content" />
 
     <ProgressBar
         android:id="@+id/progressBar"
-        android:layout_width="7dp"
-        android:layout_height="7dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
 
-        android:visibility="gone"
-/>
+        android:layout_weight="2"
+        />
 
 </LinearLayout>

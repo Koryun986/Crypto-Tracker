@@ -14,7 +14,7 @@ public class Constants {
         return "https://api.coingecko.com/api/v3/coins/markets?vs_currency="+ExchangedCurrency.exchangedCurrency+"&order=market_cap_desc&0";
     }
     public static final String CURRENCY_URL (String id) {
-        return "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids="+id+"&order=market_cap_desc&sparkline=false";
+        return "https://api.coingecko.com/api/v3/coins/markets?vs_currency="+ExchangedCurrency.exchangedCurrency+"&ids="+id+"&order=market_cap_desc&sparkline=false";
     }
     public static final String SEARCH_CURRENCY = "https://api.coingecko.com/api/v3/search?query=";
     public static final String CURRENCY_CHART (String name, int days) {
