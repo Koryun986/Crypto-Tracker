@@ -34,7 +34,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout3"
+        android:id="@+id/list_view_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/blue_dark"
@@ -70,11 +70,20 @@
         android:id="@+id/list_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
+        app:layout_constraintTop_toBottomOf="@+id/list_view_navigation"
         tools:layout_editor_absoluteX="27dp">
 
 
     </ListView>
+
+    <FrameLayout
+        android:id="@+id/fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation_bar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -84,6 +93,10 @@
         android:layout_centerVertical="true"
 
         android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation_bar"
+        app:layout_constraintEnd_toEndOf="@+id/list_view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/list_view_navigation"
         tools:ignore="MissingConstraints" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -95,8 +108,8 @@
         android:background="@drawable/bottom_bar_bg"
         app:menu="@menu/navigation_bottom_bar"
         app:itemIconSize="25dp"
-        app:labelVisibilityMode="unlabeled"
         app:itemIconTint="@color/white"
+        app:itemTextColor="@color/white"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

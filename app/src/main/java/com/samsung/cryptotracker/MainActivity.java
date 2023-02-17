@@ -16,18 +16,22 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
+ import androidx.annotation.NonNull;
+ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+ import androidx.fragment.app.FragmentTransaction;
 
 
-import com.android.volley.Request;
+ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.samsung.cryptotracker.Adapter.ListViewAdapter;
+ import com.google.android.material.bottomnavigation.BottomNavigationView;
+ import com.google.android.material.navigation.NavigationBarView;
+ import com.samsung.cryptotracker.Adapter.ListViewAdapter;
 import com.samsung.cryptotracker.DB.DBManager;
 import com.samsung.cryptotracker.Exchange.ExchangedCurrency;
 
@@ -47,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     SearchView searchView;
     Spinner spinner;
     String[] spinnerValues = {"USD","EUR","RUB"};
+    BottomNavigationView navigationView;
 
 
     @Override
@@ -58,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         listView = findViewById(R.id.list_view);
         toolbar = findViewById(R.id.toolBar);
         searchView = findViewById(R.id.search_bar);
+        navigationView = findViewById(R.id.bottom_navigation_bar);
         ExchangedCurrency exchangedCurrency = new ExchangedCurrency();
 
 //        Toolbar
@@ -93,6 +99,30 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+//        Navigation View
+
+        navigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                switch (item.getItemId()) {
+                    case R.id.market:
+                        break;
+                    case R.id.favorites:
+                        listView.setVisibility(View.GONE);
+                        FavoritesFragment favoritesFragment = new FavoritesFragment();
+                        ft.replace(R.id.fragment, favoritesFragment);
+                        ft.commit();
+                        break;
+                    case R.id.search:
+                        break;
+
+                }
+                return false;
+            }
+        });
+
 
         Loader loader = new Loader();
         loader.start();
