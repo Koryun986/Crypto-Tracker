@@ -13,9 +13,7 @@
         <item name="android:statusBarColor" tools:targetApi="l">@color/blue_bg</item>
         <!-- Customize your theme here. -->
         <item name="android:textColor">@color/blue_price</item>
-        <item name="android:textColorHint">@color/blue_price</item>
         <item name="android:textColorSecondary">@color/white</item>
         <item name="editTextColor">@color/white</item>
-        <item name="android:fontFamily">@font/inter</item>
     </style>
 </resources>
