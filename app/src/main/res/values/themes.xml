@@ -15,5 +15,6 @@
         <item name="android:textColor">@color/blue_price</item>
         <item name="android:textColorSecondary">@color/white</item>
         <item name="editTextColor">@color/white</item>
+        <item name="android:actionBarWidgetTheme">@color/white</item>
     </style>
 </resources>

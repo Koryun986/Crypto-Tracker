@@ -21,6 +21,7 @@ import android.widget.TextView;
  import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+ import androidx.fragment.app.Fragment;
  import androidx.fragment.app.FragmentTransaction;
 
 
@@ -58,8 +59,9 @@ public class MainActivity extends AppCompatActivity {
         listView = findViewById(R.id.list_view);
         toolbar = findViewById(R.id.toolBar);
         navigationView = findViewById(R.id.bottom_navigation_bar);
-        MarketFragment marketFragment = new MarketFragment();
-        FavoritesFragment favoritesFragment = new FavoritesFragment();
+        Fragment marketFragment = new MarketFragment();
+        Fragment favoritesFragment = new FavoritesFragment();
+        Fragment searchFragment = new SearchFragment();
 
 //        Fragment
         getSupportFragmentManager().beginTransaction()
@@ -72,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment);
                 switch (item.getItemId()) {
                     case R.id.market:
                         ft.replace(R.id.fragment, marketFragment);
@@ -82,6 +85,8 @@ public class MainActivity extends AppCompatActivity {
                         ft.commit();
                         break;
                     case R.id.search:
+                        ft.replace(R.id.fragment, searchFragment);
+                        ft.commit();
                         break;
 
                 }

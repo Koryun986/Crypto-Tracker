@@ -127,70 +127,35 @@ public class MarketFragment extends Fragment {
 
 
     private void loadJsonFromUrl() {
-        new android.os.Handler(Looper.getMainLooper()).postDelayed(
-                new Runnable() {
-                    public void run() {
-                        final ProgressBar progressBar = view.findViewById(R.id.progressBar);
-                        String url = Constants.API_URL();
-                        progressBar.setVisibility(View.VISIBLE);
-                        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                                new Response.Listener<String>() {
-                                    @Override
-                                    public void onResponse(String response) {
-                                        progressBar.setVisibility(View.GONE);
-                                        try {
-                                            JSONArray jsonArray = new JSONArray(response);
-                                            ArrayList<JSONObject> item = getArrayListFromJSONArray(jsonArray);
-                                            ListAdapter listAdapter = new ListViewAdapter(getContext(), R.layout.row, R.id.container, item);
-                                            listView.setAdapter(listAdapter);
+        final ProgressBar progressBar = view.findViewById(R.id.progressBar);
+        String url = Constants.API_URL();
+        progressBar.setVisibility(View.VISIBLE);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        progressBar.setVisibility(View.GONE);
+                        try {
+                            JSONArray jsonArray = new JSONArray(response);
+                            ArrayList<JSONObject> item = getArrayListFromJSONArray(jsonArray);
+                            ListAdapter listAdapter = new ListViewAdapter(getContext(), R.layout.row, R.id.container, item);
+                            listView.setAdapter(listAdapter);
 
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                progressBar.setVisibility(View.GONE);
-                                error.printStackTrace();
-                            }
-                        });
-                        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-                        requestQueue.add(stringRequest);
-                        dbManager.closeDb();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
-                },
-                1000);
-
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                progressBar.setVisibility(View.GONE);
+                error.printStackTrace();
+            }
+        });
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+        requestQueue.add(stringRequest);
+        dbManager.closeDb();
     }
 
-//    private void loadJsonFromUrl(String url, String name) {
-//        final ProgressBar progressBar = view.findViewById(R.id.progressBar);
-//        progressBar.setVisibility(View.VISIBLE);
-//        StringRequest stringRequest = new StringRequest(Request.Method.GET, url + name,
-//                new Response.Listener<String>() {
-//                    @Override
-//                    public void onResponse(String response) {
-//                        progressBar.setVisibility(View.GONE);
-//                        try {
-//                            JSONObject jsonObject = new JSONObject(response);
-//                            ArrayList<JSONObject> item = getArrayListFromJSONArray(jsonObject.getJSONArray("coins"));
-//                            ListAdapter listAdapter = new ListViewAdapter(getContext(), R.layout.row, R.id.container, item);
-//                            listView.setAdapter(listAdapter);
-//
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                progressBar.setVisibility(View.GONE);
-//                error.printStackTrace();
-//            }
-//        });
-//        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-//        requestQueue.add(stringRequest);
-//        dbManager.closeDb();
-//    }
+
 }
