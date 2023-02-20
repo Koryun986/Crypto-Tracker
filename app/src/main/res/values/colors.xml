@@ -17,4 +17,5 @@
     <color name="blue_chart_marker">#133453</color>
     <color name="blue_dark">#0C2033 </color>
     <color name="gray_logo">#D9D9D9</color>
+    <color name="transparent">#00FFFFFF</color>
 </resources>

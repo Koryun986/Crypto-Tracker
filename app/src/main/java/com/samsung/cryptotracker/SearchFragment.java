@@ -2,6 +2,7 @@ package com.samsung.cryptotracker;
 
 import static com.samsung.cryptotracker.Constants.getArrayListFromJSONArray;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.SearchView;
@@ -10,9 +11,11 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -62,6 +65,16 @@ public class SearchFragment extends Fragment {
         searchView.onActionViewExpanded();
         searchView.setIconified(false);
         searchView.clearFocus();
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                TextView id = view.findViewById(R.id.coin_id);
+                Intent intent = new Intent(getContext(), CurrencyActivity.class);
+                intent.putExtra("id", id.getText());
+                startActivity(intent);
+            }
+        });
 
 
 
