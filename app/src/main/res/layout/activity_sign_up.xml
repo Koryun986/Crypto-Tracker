@@ -6,14 +6,13 @@
     android:layout_height="match_parent"
     android:background="@color/blue_bg"
     android:paddingHorizontal="50dp"
-    tools:context=".LoginActivity">
-
+    tools:context=".SignUpActivity">
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="68dp"
-        android:text="Login"
+        android:text="Sign up"
         android:textSize="35dp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -41,7 +40,7 @@
             android:textSize="18dp" />
 
         <EditText
-            android:id="@+id/login_emial_edit_text"
+            android:id="@+id/sign_up_emial_edit_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/login_edit_text_bg"
@@ -52,7 +51,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/login_password_layout"
+        android:id="@+id/sign_up_password_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -78,7 +77,7 @@
             android:orientation="horizontal">
 
             <EditText
-                android:id="@+id/login_password_edit_text"
+                android:id="@+id/sign_up_password_edit_text"
 
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -105,6 +104,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
+
     </LinearLayout>
 
     <TextView
@@ -114,22 +114,22 @@
         android:background="@drawable/login_register_btn_bg"
         android:gravity="center"
         android:paddingVertical="8dp"
-        android:text="Login"
+        android:text="Sign Up"
         android:textColor="@color/blue_bg"
         android:textSize="25dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.505"
+        app:layout_constraintHorizontal_bias="0.252"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_password_layout"
-        app:layout_constraintVertical_bias="0.091" />
+        app:layout_constraintTop_toBottomOf="@+id/sign_up_password_layout"
+        app:layout_constraintVertical_bias="0.119" />
 
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="52dp"
-        android:text="Sign in with"
+        android:text="Sign up with"
         android:textSize="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -205,13 +205,13 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Don't have account?" />
+            android:text="Already have an account?" />
         <TextView
-            android:id="@+id/create_account"
+            android:id="@+id/to_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:text="Create Account!"
+            android:text="Login"
             android:textColor="@color/blue"/>
     </LinearLayout>
 
