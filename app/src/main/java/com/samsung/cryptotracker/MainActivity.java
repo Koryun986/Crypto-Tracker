@@ -34,6 +34,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
  import com.google.android.material.bottomnavigation.BottomNavigationView;
  import com.google.android.material.navigation.NavigationBarView;
+ import com.google.firebase.auth.FirebaseAuth;
+ import com.google.firebase.auth.FirebaseUser;
  import com.samsung.cryptotracker.Adapter.ListViewAdapter;
 import com.samsung.cryptotracker.DB.DBManager;
 import com.samsung.cryptotracker.Exchange.ExchangedCurrency;
@@ -48,15 +50,23 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
+
+    private FirebaseAuth auth;
+    private FirebaseUser user;
     ListView listView;
     Toolbar toolbar;
     BottomNavigationView navigationView;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
+
         listView = findViewById(R.id.list_view);
         toolbar = findViewById(R.id.toolBar);
         navigationView = findViewById(R.id.bottom_navigation_bar);

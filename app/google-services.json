@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1085907103490",
+    "project_id": "crypto-tracker-c2be5",
+    "storage_bucket": "crypto-tracker-c2be5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1085907103490:android:a134dbb3bb8299f8aa5c1b",
+        "android_client_info": {
+          "package_name": "com.samsung.cryptotracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1085907103490-0tk0aeikhs27le2a2nbuqm1jj9mjefuu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.samsung.cryptotracker",
+            "certificate_hash": "5db3364afb69db0e856008b76b7b4a5b8c5a2646"
+          }
+        },
+        {
+          "client_id": "1085907103490-pluqqi98v9jd9mt4hkl5jlnli598415j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbwOqTs8_lJQhIuWQfIIwZYRf5MAlsnVg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1085907103490-pluqqi98v9jd9mt4hkl5jlnli598415j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
