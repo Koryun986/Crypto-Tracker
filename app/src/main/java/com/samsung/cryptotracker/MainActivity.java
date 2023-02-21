@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
  import android.os.Handler;
+ import android.util.Log;
  import android.view.MenuItem;
 import android.view.View;
  import android.view.WindowManager;
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     ListView listView;
     Toolbar toolbar;
     BottomNavigationView navigationView;
+    TextView logOut;
 
 
 
@@ -70,9 +72,21 @@ public class MainActivity extends AppCompatActivity {
         listView = findViewById(R.id.list_view);
         toolbar = findViewById(R.id.toolBar);
         navigationView = findViewById(R.id.bottom_navigation_bar);
+        logOut = findViewById(R.id.log_out);
+
         Fragment marketFragment = new MarketFragment();
         Fragment favoritesFragment = new FavoritesFragment();
         Fragment searchFragment = new SearchFragment();
+
+        logOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
 
 //        Fragment
