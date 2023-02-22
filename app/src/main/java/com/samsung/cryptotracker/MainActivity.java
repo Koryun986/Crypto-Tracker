@@ -57,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
     ListView listView;
     Toolbar toolbar;
     BottomNavigationView navigationView;
-    TextView logOut;
 
 
 
@@ -72,21 +71,12 @@ public class MainActivity extends AppCompatActivity {
         listView = findViewById(R.id.list_view);
         toolbar = findViewById(R.id.toolBar);
         navigationView = findViewById(R.id.bottom_navigation_bar);
-        logOut = findViewById(R.id.log_out);
 
         Fragment marketFragment = new MarketFragment();
         Fragment favoritesFragment = new FavoritesFragment();
         Fragment searchFragment = new SearchFragment();
+        Fragment profileFragment = new ProfileFragment();
 
-        logOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
 
 
 //        Fragment
@@ -114,7 +104,9 @@ public class MainActivity extends AppCompatActivity {
                         ft.replace(R.id.fragment, searchFragment);
                         ft.commit();
                         break;
-
+                    case R.id.profile:
+                        ft.replace(R.id.fragment, profileFragment);
+                        ft.commit();
                 }
                 return false;
             }

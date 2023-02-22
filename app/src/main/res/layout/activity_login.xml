@@ -172,6 +172,7 @@
             android:textColor="@color/blue_bg" />
     </LinearLayout>
 
+
     <LinearLayout
         android:id="@+id/facebook_signin"
         android:layout_width="match_parent"
@@ -199,6 +200,7 @@
             android:text="Sign up with Facebook"
             android:textColor="@color/blue_bg" />
     </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="wrap_content"

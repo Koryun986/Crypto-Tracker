@@ -17,6 +17,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -26,15 +32,19 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+
+import java.util.Arrays;
 
 public class SignUpActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 1000;
     private Boolean isClosedEye = false;
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
+    private CallbackManager mCallbackManager;
     ImageView eye;
     EditText emailEditText;
     EditText passwordEditText;
@@ -61,6 +71,7 @@ public class SignUpActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+        mCallbackManager = CallbackManager.Factory.create();
         mAuth = FirebaseAuth.getInstance();
         eye = findViewById(R.id.password_eye);
         emailEditText = findViewById(R.id.sign_up_emial_edit_text);
@@ -69,7 +80,7 @@ public class SignUpActivity extends AppCompatActivity {
         signUpBtn = findViewById(R.id.sign_up_btn);
         progressBar = findViewById(R.id.progress_bar);
         googleSignUp = findViewById(R.id.google_signup);
-        facebookSignUp = findViewById(R.id.facebook_signin);
+        facebookSignUp = findViewById(R.id.facebook_signup);
 
         eye.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,6 +150,29 @@ public class SignUpActivity extends AppCompatActivity {
                 signUp();
             }
         });
+
+        facebookSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LoginManager.getInstance().logInWithReadPermissions(SignUpActivity.this,Arrays.asList("public_profile"));
+                LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        handleFacebookAccessToken(loginResult.getAccessToken());
+                    }
+
+                    @Override
+                    public void onCancel() {
+
+                    }
+
+                    @Override
+                    public void onError(FacebookException error) {
+
+                    }
+                });
+            }
+        });
     }
     private void createRequest() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -183,6 +217,25 @@ public class SignUpActivity extends AppCompatActivity {
                         }else {
                             String message = "Sorry something went wrong";
                             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();;
+                        }
+                    }
+                });
+    }
+
+    private void handleFacebookAccessToken(AccessToken token) {
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Toast.makeText(getApplicationContext(), "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
