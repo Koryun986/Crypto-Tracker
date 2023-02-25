@@ -24,7 +24,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.samsung.cryptotracker.Adapter.ListViewAdapter;
-import com.samsung.cryptotracker.DB.DBManager;
+
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -52,14 +52,12 @@ public class SearchFragment extends Fragment {
     SearchView searchView;
     ListView listView;
     ProgressBar progressBar;
-    private DBManager dbManager;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_search, container, false);
         searchView = view.findViewById(R.id.search_view);
         listView = view.findViewById(R.id.list_view);
-        dbManager = new DBManager(getContext());
         progressBar = view.findViewById(R.id.progressBar);
 
         searchView.onActionViewExpanded();
@@ -125,6 +123,5 @@ public class SearchFragment extends Fragment {
         });
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         requestQueue.add(stringRequest);
-        dbManager.closeDb();
     }
 }

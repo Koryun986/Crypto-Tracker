@@ -33,7 +33,6 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.samsung.cryptotracker.Adapter.ListViewAdapter;
-import com.samsung.cryptotracker.DB.DBManager;
 import com.samsung.cryptotracker.Exchange.ExchangedCurrency;
 
 import org.json.JSONArray;
@@ -64,7 +63,6 @@ public class MarketFragment extends Fragment {
 
     View view;
     ListView listView;
-    DBManager dbManager;
     Spinner spinner;
     String[] spinnerValues = {"USD","EUR","RUB"};
 
@@ -73,7 +71,7 @@ public class MarketFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_market, container, false);
-        dbManager = new DBManager(getContext());
+
         spinner = view.findViewById(R.id.spinner);
         listView = view.findViewById(R.id.list_view);
         ExchangedCurrency exchangedCurrency = new ExchangedCurrency();
@@ -154,7 +152,6 @@ public class MarketFragment extends Fragment {
         });
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         requestQueue.add(stringRequest);
-        dbManager.closeDb();
     }
 
 

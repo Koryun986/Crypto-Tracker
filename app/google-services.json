@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "1085907103490",
+    "firebase_url": "https://crypto-tracker-c2be5-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "crypto-tracker-c2be5",
     "storage_bucket": "crypto-tracker-c2be5.appspot.com"
   },
@@ -22,7 +23,7 @@
           }
         },
         {
-          "client_id": "1085907103490-pluqqi98v9jd9mt4hkl5jlnli598415j.apps.googleusercontent.com",
+          "client_id": "1085907103490-r1ocijegjr5nukmlebn5lvm65nkc29dl.apps.googleusercontent.com",
           "client_type": 3
         }
       ],

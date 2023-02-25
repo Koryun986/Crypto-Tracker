@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Crypto Tracker</string>
+
+
+    <string name="facebook_app_id">936134417757148</string>
+    <string name="fb_login_protocol_scheme">fb936134417757148</string>
+    <string name="facebook_client_token">793ef947ef787e5d049da9965a4f7b33</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
 </resources>
