@@ -5,10 +5,12 @@ import static com.samsung.cryptotracker.Constants.getArrayListFromJSONArray;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,8 +28,15 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.samsung.cryptotracker.Adapter.ListViewAdapter;
-import com.samsung.cryptotracker.DB.DBManager;
+
 import com.samsung.cryptotracker.Exchange.ExchangedCurrency;
 
 import org.json.JSONArray;
@@ -56,9 +65,11 @@ public class FavoritesFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
     }
-
+    private FirebaseDatabase database;
+    private DatabaseReference ref;
+    private FirebaseAuth auth;
+    private FirebaseUser user;
     View view;
-    private DBManager dbManager;
     ListView listView;
 
     Spinner spinner;
@@ -69,6 +80,11 @@ public class FavoritesFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_favorites, container, false);
         listView = view.findViewById(R.id.list_view);
         spinner = view.findViewById(R.id.spinner);
+
+        database = FirebaseDatabase.getInstance();
+        ref = database.getReference("users");
+        auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
 
         Loader loader = new Loader();
         loader.start();
@@ -92,14 +108,7 @@ public class FavoritesFragment extends Fragment {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 String value = adapterView.getItemAtPosition(i).toString().toLowerCase(Locale.ROOT);
                 ExchangedCurrency.exchangedCurrency = value;
-                dbManager = new DBManager(getContext());
-                dbManager.openDB();
-                List<String> list = dbManager.getFromDb();
-                String coins = "";
-                for (int j = 0; j < list.size(); j++) {
-                    coins += "," + list.get(j);
-                }
-                loadJsonFromUrl(Constants.CURRENCY_URL(coins));
+                getFavorites();
             }
 
             @Override
@@ -116,14 +125,7 @@ public class FavoritesFragment extends Fragment {
         @Override
         public void run() {
             super.run();
-            dbManager = new DBManager(getContext());
-            dbManager.openDB();
-            List<String> list = dbManager.getFromDb();
-            String coins = "";
-            for (int i = 0; i < list.size(); i++) {
-                coins += "," + list.get(i);
-            }
-            loadJsonFromUrl(Constants.CURRENCY_URL(coins));
+            getFavorites();
         }
     }
 
@@ -155,6 +157,35 @@ public class FavoritesFragment extends Fragment {
         });
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         requestQueue.add(stringRequest);
-        dbManager.closeDb();
+//        dbManager.closeDb();
+    }
+
+    private void getFavorites() {
+        List<String> list = new ArrayList<>();
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                DataSnapshot favorites = snapshot.child(user.getUid()).child("favorites");
+                for (DataSnapshot favCoin: favorites.getChildren()) {
+                    String coin = favCoin.getValue(String.class);
+                    list.add(coin);
+
+                }
+                Log.i("korr", list.toString());
+                if (!list.isEmpty()){
+                    String coins = "";
+                    for (int i = 0; i < list.size(); i++) {
+                        coins += "," + list.get(i);
+                    }
+                    loadJsonFromUrl(Constants.CURRENCY_URL(coins));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 }

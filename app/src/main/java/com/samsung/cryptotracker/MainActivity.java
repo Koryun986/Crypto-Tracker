@@ -37,8 +37,13 @@ import com.android.volley.toolbox.Volley;
  import com.google.android.material.navigation.NavigationBarView;
  import com.google.firebase.auth.FirebaseAuth;
  import com.google.firebase.auth.FirebaseUser;
+ import com.google.firebase.database.DataSnapshot;
+ import com.google.firebase.database.DatabaseError;
+ import com.google.firebase.database.DatabaseReference;
+ import com.google.firebase.database.FirebaseDatabase;
+ import com.google.firebase.database.ValueEventListener;
  import com.samsung.cryptotracker.Adapter.ListViewAdapter;
-import com.samsung.cryptotracker.DB.DBManager;
+
 import com.samsung.cryptotracker.Exchange.ExchangedCurrency;
 
 
@@ -54,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
     private FirebaseUser user;
+    private FirebaseDatabase database;
+    private DatabaseReference ref;
     ListView listView;
     Toolbar toolbar;
     BottomNavigationView navigationView;
@@ -67,10 +74,28 @@ public class MainActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
-
         listView = findViewById(R.id.list_view);
         toolbar = findViewById(R.id.toolBar);
         navigationView = findViewById(R.id.bottom_navigation_bar);
+        user = auth.getCurrentUser();
+        database = FirebaseDatabase.getInstance();;
+        ref = database.getReference("users");
+
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (!snapshot.child(user.getUid()).exists()) {
+                    User userClass = new User(user.getEmail());
+                    snapshot.child(user.getUid()).getRef().setValue(userClass);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
 
         Fragment marketFragment = new MarketFragment();
         Fragment favoritesFragment = new FavoritesFragment();
@@ -90,7 +115,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment);
                 switch (item.getItemId()) {
                     case R.id.market:
                         ft.replace(R.id.fragment, marketFragment);
