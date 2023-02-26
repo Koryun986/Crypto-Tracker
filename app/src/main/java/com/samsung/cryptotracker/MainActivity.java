@@ -75,7 +75,6 @@ public class MainActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
         listView = findViewById(R.id.list_view);
-        toolbar = findViewById(R.id.toolBar);
         navigationView = findViewById(R.id.bottom_navigation_bar);
         user = auth.getCurrentUser();
         database = FirebaseDatabase.getInstance();;
@@ -98,8 +97,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         Fragment marketFragment = new MarketFragment();
-        Fragment favoritesFragment = new FavoritesFragment();
-        Fragment searchFragment = new SearchFragment();
+
+
         Fragment profileFragment = new ProfileFragment();
 
 
@@ -120,14 +119,7 @@ public class MainActivity extends AppCompatActivity {
                         ft.replace(R.id.fragment, marketFragment);
                         ft.commit();
                         break;
-                    case R.id.favorites:
-                        ft.replace(R.id.fragment, favoritesFragment);
-                        ft.commit();
-                        break;
-                    case R.id.search:
-                        ft.replace(R.id.fragment, searchFragment);
-                        ft.commit();
-                        break;
+
                     case R.id.profile:
                         ft.replace(R.id.fragment, profileFragment);
                         ft.commit();

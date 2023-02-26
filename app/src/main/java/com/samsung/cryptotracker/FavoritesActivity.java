@@ -2,20 +2,16 @@ package com.samsung.cryptotracker;
 
 import static com.samsung.cryptotracker.Constants.getArrayListFromJSONArray;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-
-import android.os.Looper;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -36,7 +32,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.samsung.cryptotracker.Adapter.ListViewAdapter;
-
 import com.samsung.cryptotracker.Exchange.ExchangedCurrency;
 
 import org.json.JSONArray;
@@ -47,39 +42,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-
-public class FavoritesFragment extends Fragment {
-
-
-
-
-
-    public static FavoritesFragment newInstance(String param1, String param2) {
-        FavoritesFragment fragment = new FavoritesFragment();
-
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
+public class FavoritesActivity extends AppCompatActivity {
     private FirebaseDatabase database;
     private DatabaseReference ref;
     private FirebaseAuth auth;
     private FirebaseUser user;
-    View view;
     ListView listView;
-
+    ImageView toMarket;
     Spinner spinner;
     String[] spinnerValues = {"USD","EUR","RUB"};
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_favorites, container, false);
-        listView = view.findViewById(R.id.list_view);
-        spinner = view.findViewById(R.id.spinner);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_favorites);
+        listView = findViewById(R.id.list_view);
+        spinner = findViewById(R.id.spinner);
+        toMarket = findViewById(R.id.to_market);
 
         database = FirebaseDatabase.getInstance();
         ref = database.getReference("users");
@@ -89,18 +67,19 @@ public class FavoritesFragment extends Fragment {
         Loader loader = new Loader();
         loader.start();
 
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 TextView id = view.findViewById(R.id.coin_id);
-                Intent intent = new Intent(getContext(), CurrencyActivity.class);
+                Intent intent = new Intent(getApplicationContext(), CurrencyActivity.class);
                 intent.putExtra("id", id.getText());
                 startActivity(intent);
             }
         });
 
         //        Spinner Exchanged Currency
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, spinnerValues);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, spinnerValues);
         adapter.setDropDownViewResource(androidx.appcompat.R.layout.support_simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -118,8 +97,16 @@ public class FavoritesFragment extends Fragment {
         });
 
 
-        return view;
+        toMarket.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(FavoritesActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
+
 
     class Loader extends Thread{
         @Override
@@ -132,7 +119,7 @@ public class FavoritesFragment extends Fragment {
 
 
     private void loadJsonFromUrl(String url) {
-        final ProgressBar progressBar = view.findViewById(R.id.progressBar);
+        final ProgressBar progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
@@ -142,7 +129,7 @@ public class FavoritesFragment extends Fragment {
                         try {
                             JSONArray jsonArray = new JSONArray(response);
                             ArrayList<JSONObject> item = getArrayListFromJSONArray(jsonArray);
-                            ListAdapter listAdapter = new ListViewAdapter(getContext(), R.layout.row, R.id.container, item);
+                            ListAdapter listAdapter = new ListViewAdapter(getApplicationContext(), R.layout.row, R.id.container, item);
                             listView.setAdapter(listAdapter);
 
                         } catch (JSONException e) {
@@ -155,7 +142,7 @@ public class FavoritesFragment extends Fragment {
                 error.printStackTrace();
             }
         });
-        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         requestQueue.add(stringRequest);
 //        dbManager.closeDb();
     }

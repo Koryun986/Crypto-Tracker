@@ -2,35 +2,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".MarketFragment"
+    android:layout_height="match_parent"
+    tools:context=".FavoritesFragment"
+    android:background="@color/blue_bg"
     android:orientation="vertical">
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/tool_bar"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:background="@color/blue_bg"
-            app:menu="@menu/tool_bar_menu"
-            app:title="@string/app_name"
-            app:theme="@style/AppTheme.Toolbar"
-            app:titleTextColor="@color/white">
-
-            <androidx.appcompat.widget.SearchView
-                android:id="@+id/search_bar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                app:queryHint="Search..."/>
-        </com.google.android.material.appbar.MaterialToolbar>
-    </com.google.android.material.appbar.AppBarLayout>
-
-
+    <ImageView
+        android:id="@+id/to_market"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/ic_baseline_arrow_back_24"
+        android:layout_marginLeft="20dp"
+        android:layout_marginVertical="10dp"/>
 
     <LinearLayout
         android:id="@+id/list_view_navigation"
@@ -63,20 +46,17 @@
             android:layout_weight="1"
             android:text="24h change" />
     </LinearLayout>
-
     <ListView
         android:id="@+id/list_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"/>
 
     <ProgressBar
         android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
+        android:layout_width="7dp"
+        android:layout_height="7dp"
 
-        android:layout_weight="2"
+        android:visibility="gone"
         />
 
 </LinearLayout>
