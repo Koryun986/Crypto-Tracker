@@ -4,6 +4,9 @@
         android:icon="@drawable/ic_logo_svg"
         android:title="Market"
         />
+    <item android:id="@+id/portfolio"
+        android:icon="@drawable/ic_pie_chart_icon"
+        android:title="Portfolio"/>
     <item android:id="@+id/profile"
         android:icon="@drawable/ic_baseline_person_24"
         android:title="Profile"/>

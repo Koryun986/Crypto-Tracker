@@ -97,8 +97,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         Fragment marketFragment = new MarketFragment();
-
-
+        Fragment portfolioFragment = new PortfolioFragment();
         Fragment profileFragment = new ProfileFragment();
 
 
@@ -119,7 +118,10 @@ public class MainActivity extends AppCompatActivity {
                         ft.replace(R.id.fragment, marketFragment);
                         ft.commit();
                         break;
-
+                    case R.id.portfolio:
+                        ft.replace(R.id.fragment, portfolioFragment);
+                        ft.commit();
+                        break;
                     case R.id.profile:
                         ft.replace(R.id.fragment, profileFragment);
                         ft.commit();
