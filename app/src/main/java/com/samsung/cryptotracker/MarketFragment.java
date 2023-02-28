@@ -64,6 +64,8 @@ public class MarketFragment extends Fragment {
     View view;
     ListView listView;
     Spinner spinner;
+    Toolbar toolbar;
+    SearchView searchView;
     String[] spinnerValues = {"USD","EUR","RUB"};
 
 
@@ -72,15 +74,53 @@ public class MarketFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_market, container, false);
 
+        toolbar = view.findViewById(R.id.tool_bar);
         spinner = view.findViewById(R.id.spinner);
+        searchView = view.findViewById(R.id.search_bar);
         listView = view.findViewById(R.id.list_view);
         ExchangedCurrency exchangedCurrency = new ExchangedCurrency();
 
 
-
-
         Loader loader = new Loader();
         loader.start();
+
+//      Tool Bar
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.favorites:
+                        Intent intent = new Intent(getContext(), FavoritesActivity.class);
+                        startActivity(intent);
+                        getActivity().finish();
+                        break;
+                    default:
+                        break;
+                }
+                return false;
+            }
+        });
+        searchView.clearFocus();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String name) {
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String name) {
+                if(name.length() == 0 ){
+                    loadJsonFromUrl();
+                }else{
+                    loadJsonFromUrlSearchView(Constants.SEARCH_CURRENCY, name);
+
+                }
+
+                return true;
+            }
+        });
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -127,7 +167,6 @@ public class MarketFragment extends Fragment {
     private void loadJsonFromUrl() {
         final ProgressBar progressBar = view.findViewById(R.id.progressBar);
         String url = Constants.API_URL();
-        progressBar.setVisibility(View.VISIBLE);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
@@ -154,5 +193,31 @@ public class MarketFragment extends Fragment {
         requestQueue.add(stringRequest);
     }
 
+    private void loadJsonFromUrlSearchView(String url, String name) {
+        final ProgressBar progressBar = view.findViewById(R.id.progressBar);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url + name,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        progressBar.setVisibility(View.GONE);
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            ArrayList<JSONObject> item = getArrayListFromJSONArray(jsonObject.getJSONArray("coins"));
+                            ListAdapter listAdapter = new ListViewAdapter(getContext(), R.layout.row, R.id.container, item);
+                            listView.setAdapter(listAdapter);
 
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                progressBar.setVisibility(View.GONE);
+                error.printStackTrace();
+            }
+        });
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+        requestQueue.add(stringRequest);
+    }
 }

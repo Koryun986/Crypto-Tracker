@@ -17,7 +17,6 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:background="@color/blue_bg"
-            app:menu="@menu/tool_bar"
             app:titleTextColor="@color/white">
             <TextView
                 android:id="@+id/back_button"
@@ -42,12 +41,12 @@
                 android:textSize="17sp"
                 android:textStyle="bold" />
 
-            <androidx.appcompat.widget.SearchView
-                android:id="@+id/search_bar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                app:queryHint="Search..."/>
+<!--            <androidx.appcompat.widget.SearchView-->
+<!--                android:id="@+id/search_bar"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="right"-->
+<!--                app:queryHint="Search..."/>-->
         </com.google.android.material.appbar.MaterialToolbar>
     </com.google.android.material.appbar.AppBarLayout>
 

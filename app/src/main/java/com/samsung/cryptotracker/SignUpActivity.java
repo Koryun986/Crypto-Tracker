@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -106,7 +107,9 @@ public class SignUpActivity extends AppCompatActivity {
         toLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                authSuccess();
+                Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
 
@@ -123,7 +126,7 @@ public class SignUpActivity extends AppCompatActivity {
                     return;
                 }
 
-                if (TextUtils.isEmpty(password)) {
+                if (password.length() <= 6) {
                     Toast.makeText(SignUpActivity.this, "Please enter password", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -134,7 +137,22 @@ public class SignUpActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 progressBar.setVisibility(View.GONE);
                                 if (task.isSuccessful()) {
-                                    authSuccess();
+                                    mAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if(task.isSuccessful()){
+                                                Toast.makeText(SignUpActivity.this, "User registered successfully. Please verify your email",
+                                                        Toast.LENGTH_SHORT).show();
+                                                if (mAuth.getCurrentUser().isEmailVerified()) {
+                                                    authSuccess();
+                                                }else {
+                                                    Toast.makeText(SignUpActivity.this, "Please verify your email",
+                                                            Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        }
+                                    });
+
                                 } else {
                                     Toast.makeText(SignUpActivity.this, "Authentication failed.",
                                             Toast.LENGTH_SHORT).show();

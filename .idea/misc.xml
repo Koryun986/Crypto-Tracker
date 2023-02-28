@@ -5,7 +5,10 @@
       <map>
         <entry key="..\:/Users/Lenovo/.gradle/caches/transforms-3/42b8be880388cf800e6570befb2a0cd8/transformed/appcompat-1.5.1/res/layout/support_simple_spinner_dropdown_item.xml" value="0.22826086956521738" />
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/drawable/bottom_bar_bg.xml" value="0.194" />
+        <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/drawable/btn_bg_disable.xml" value="0.195" />
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/drawable/chart_days_btn_bg.xml" value="0.2265" />
+        <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/drawable/circle_bg.xml" value="0.195" />
+        <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/drawable/ic_add_money_icon.xml" value="0.195" />
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/drawable/ic_baseline_favorite_border_24.xml" value="0.2265" />
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/drawable/ic_eye_closed.xml" value="0.194" />
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/drawable/ic_eye_open.xml" value="0.194" />
@@ -13,6 +16,7 @@
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/drawable/ic_google_logo.xml" value="0.194" />
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/drawable/ic_logo_blue.xml" value="0.194" />
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/drawable/ic_logo_svg.xml" value="0.194" />
+        <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/drawable/ic_pie_chart_icon.xml" value="0.195" />
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/drawable/line_chart_gradient.xml" value="0.136" />
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/drawable/line_chart_marker.xml" value="0.2265" />
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/drawable/login_bg.xml" value="0.194" />
@@ -24,6 +28,7 @@
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/drawable/splash_screen_bg.xml" value="0.194" />
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/font/inter.xml" value="0.30364583333333334" />
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/font/inter_bold.xml" value="0.3046875" />
+        <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/layout/activity_add_coin_to_portfolio.xml" value="0.27447916666666666" />
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/layout/activity_currency.xml" value="0.22826086956521738" />
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/layout/activity_favorites.xml" value="0.22826086956521738" />
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/layout/activity_login.xml" value="0.22826086956521738" />
@@ -34,14 +39,17 @@
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/layout/custom_marker_view_layuot.xml" value="0.22826086956521738" />
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/layout/fragment_favorites.xml" value="0.22826086956521738" />
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/layout/fragment_market.xml" value="0.22826086956521738" />
+        <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/layout/fragment_portfolio.xml" value="0.27447916666666666" />
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/layout/fragment_profile.xml" value="0.22826086956521738" />
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/layout/fragment_search.xml" value="0.22826086956521738" />
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/layout/fragment_tool_bar.xml" value="0.22826086956521738" />
+        <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/layout/portfolio_row.xml" value="0.2734375" />
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/layout/row.xml" value="0.2" />
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/layout/spinner_item.xml" value="0.12708333333333333" />
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/menu/navigation_bottom_bar.xml" value="0.2734375" />
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/menu/pop_up_menu.xml" value="0.2734375" />
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/menu/tool_bar.xml" value="0.27447916666666666" />
+        <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/menu/tool_bar_menu.xml" value="0.2734375" />
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.137" />
       </map>
     </option>
