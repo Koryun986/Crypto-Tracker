@@ -144,7 +144,6 @@ public class FavoritesActivity extends AppCompatActivity {
         });
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         requestQueue.add(stringRequest);
-//        dbManager.closeDb();
     }
 
     private void getFavorites() {
@@ -158,7 +157,6 @@ public class FavoritesActivity extends AppCompatActivity {
                     list.add(coin);
 
                 }
-                Log.i("korr", list.toString());
                 if (!list.isEmpty()){
                     String coins = "";
                     for (int i = 0; i < list.size(); i++) {
