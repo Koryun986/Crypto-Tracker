@@ -35,6 +35,9 @@ public class PortfolioAdapter extends ArrayAdapter<JSONObject> {
     private DatabaseReference ref;
     private FirebaseAuth auth;
     private FirebaseUser user;
+    private final String portfolioFirebase = "portfolio";
+    private final String portfolioCountFirebase = "count";
+    private final String portfolioPriceFirebase = "price";
     int listLayout;
     ArrayList<JSONObject> obj;
     Context context;
@@ -45,7 +48,7 @@ public class PortfolioAdapter extends ArrayAdapter<JSONObject> {
         this.listLayout = listLayout;
         this.obj = obj;
         database = FirebaseDatabase.getInstance();
-        ref = database.getReference("users");
+        ref = database.getReference(Constants.FIREBASE_USERS);
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
     }
@@ -91,12 +94,12 @@ public class PortfolioAdapter extends ArrayAdapter<JSONObject> {
             coinChange.setText(change + "%");
             coinChange.setTextColor(change >= 0 ? ContextCompat.getColor(context, R.color.green) : ContextCompat.getColor(context, R.color.red));
             String finalExchangedCurrencySymbol = exchangedCurrencySymbol;
-            ref.child(user.getUid()).child("portfolio").child(String.valueOf(id.getText())).addValueEventListener(new ValueEventListener() {
+            ref.child(user.getUid()).child(portfolioFirebase).child(String.valueOf(id.getText())).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if (snapshot.child("count").exists() && snapshot.child("price").exists()){
-                        count.setText(snapshot.child("count").getValue(Double.class).toString() + "x");
-                        coinBoughtPrice.setText(snapshot.child("price").getValue(Double.class).toString() + finalExchangedCurrencySymbol);
+                    if (snapshot.child(portfolioCountFirebase).exists() && snapshot.child(portfolioPriceFirebase).exists()){
+                        count.setText(snapshot.child(portfolioCountFirebase).getValue(Double.class).toString() + "x");
+                        coinBoughtPrice.setText(snapshot.child(portfolioPriceFirebase).getValue(Double.class).toString() + finalExchangedCurrencySymbol);
                     }
                 }
 
@@ -109,7 +112,7 @@ public class PortfolioAdapter extends ArrayAdapter<JSONObject> {
                 deleteCoin.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        ref.child(user.getUid()).child("portfolio").child(String.valueOf(id.getText())).removeValue();
+                        ref.child(user.getUid()).child(portfolioFirebase).child(String.valueOf(id.getText())).removeValue();
                     }
                 });
             return listViewItem;

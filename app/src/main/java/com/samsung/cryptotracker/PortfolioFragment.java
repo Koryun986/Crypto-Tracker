@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -68,6 +69,8 @@ public class PortfolioFragment extends Fragment {
     LinearLayout addCoin;
     TextView portfolioMoney;
     ListView listView;
+    TextView portfolioProfit;
+    TextView dollarChar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -76,11 +79,13 @@ public class PortfolioFragment extends Fragment {
         addCoin = view.findViewById(R.id.add_to_portfolio);
         portfolioMoney = view.findViewById(R.id.portfolio_money);
         listView = view.findViewById(R.id.list_view);
+        portfolioProfit = view.findViewById(R.id.portfolio_profit);
+        dollarChar = view.findViewById(R.id.dollar_char);
 
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
         database = FirebaseDatabase.getInstance();
-        ref = database.getReference("users");
+        ref = database.getReference(Constants.FIREBASE_USERS);
 
         addCoin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,6 +99,8 @@ public class PortfolioFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
+                    dollarChar.setVisibility(View.VISIBLE);
+                    portfolioProfit.setText("0");
                     portfolioMoney.setText("0");
                     String coins = "";
                     for (DataSnapshot snap : snapshot.getChildren()) {
@@ -102,6 +109,8 @@ public class PortfolioFragment extends Fragment {
                     }
                     loadJsonFromUrl(Constants.CURRENCY_URL(coins));
                 }else{
+                    dollarChar.setVisibility(View.GONE);
+                    portfolioProfit.setText("");
                     String arr[] = new String[0];
                     ListAdapter listAdapter = new ArrayAdapter<String>(getApplicationContext(),
                             android.R.layout.simple_list_item_1,
@@ -131,17 +140,16 @@ public class PortfolioFragment extends Fragment {
                             ArrayList<JSONObject> item = getArrayListFromJSONArray(jsonArray);
                             for (JSONObject obj : item){
                                 String id = obj.getString(Constants.CURRENCY_ID);
-                                ref.child(user.getUid()).child("portfolio").child(id).child("count").addValueEventListener(new ValueEventListener() {
+                                Double price = obj.getDouble(Constants.CURRENCY_PRICE);
+                                ref.child(user.getUid()).child("portfolio").child(id).addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         if (snapshot.exists()){
-                                            Double count = snapshot.getValue(Double.class);
-                                            try {
-                                                Double money = count * obj.getDouble(Constants.CURRENCY_PRICE);
-                                                setPortfolioMoney(money);
-                                            } catch (JSONException e) {
-                                                e.printStackTrace();
-                                            }
+                                            Double boughtPrice = snapshot.child("price").getValue(Double.class);
+                                            Double count = snapshot.child("count").getValue(Double.class);
+                                            Double money = count * price;
+                                            Double profit =  money - count*boughtPrice;
+                                            setPortfolioMoney(money, profit);
                                         }else {
                                         }
                                     }
@@ -170,11 +178,21 @@ public class PortfolioFragment extends Fragment {
     }
 
 
-    private void setPortfolioMoney (Double money) {
+    private void setPortfolioMoney (Double money, Double profit) {
         Double currentMoney = Double.valueOf(portfolioMoney.getText().toString());
         Double finalMoney = money + currentMoney;
         DecimalFormat dec = new DecimalFormat("#0.00");
+        Double currentProfit = Double.valueOf((portfolioProfit.getText().toString()));
+        Double finalPorfit = currentProfit + profit;
         portfolioMoney.setText(String.valueOf(dec.format(finalMoney)));
+        portfolioProfit.setText(String.valueOf(dec.format(finalPorfit)));
+        if (finalPorfit >= 0) {
+            portfolioProfit.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.green));
+            dollarChar.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.green));
+        }else {
+            portfolioProfit.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.red));
+            dollarChar.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.red));
+        }
     }
 
 }

@@ -11,7 +11,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,6 +43,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class MarketFragment extends Fragment {
@@ -79,7 +83,6 @@ public class MarketFragment extends Fragment {
         searchView = view.findViewById(R.id.search_bar);
         listView = view.findViewById(R.id.list_view);
         ExchangedCurrency exchangedCurrency = new ExchangedCurrency();
-
 
         Loader loader = new Loader();
         loader.start();
@@ -153,6 +156,7 @@ public class MarketFragment extends Fragment {
 
         return view;
     }
+
 
     class Loader extends Thread{
 
