@@ -7,6 +7,8 @@
     tools:context=".PortfolioFragment"
     android:orientation="vertical">
 
+
+
     <LinearLayout
         android:id="@+id/add_to_portfolio"
         android:layout_width="match_parent"
@@ -39,20 +41,43 @@
             android:layout_height="300dp"
             android:gravity="center"
             android:background="@drawable/circle_bg"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             >
-            <TextView
-                android:id="@+id/portfolio_money"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="40dp"
-                android:text="0"/>
-            <TextView
+>
+                <TextView
+                    android:id="@+id/portfolio_money"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="40dp"
+                    android:text="0"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="40dp"
+                    android:text="$"/>
+            </LinearLayout>
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="40dp"
-                android:text="$"/>
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/portfolio_profit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="25dp"/>
+                <TextView
+                    android:id="@+id/dollar_char"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:textSize="25dp"
+                    android:text="$"/>
+
+            </LinearLayout>
         </LinearLayout>
+
     </LinearLayout>
 
 
@@ -60,5 +85,11 @@
         android:id="@+id/list_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_gravity="center"/>
 
 </LinearLayout>

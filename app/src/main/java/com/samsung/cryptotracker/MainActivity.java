@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         navigationView = findViewById(R.id.bottom_navigation_bar);
         user = auth.getCurrentUser();
         database = FirebaseDatabase.getInstance();;
-        ref = database.getReference("users");
+        ref = database.getReference(Constants.FIREBASE_USERS);
 
         ref.addValueEventListener(new ValueEventListener() {
             @Override

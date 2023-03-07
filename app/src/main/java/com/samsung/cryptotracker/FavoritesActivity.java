@@ -60,7 +60,7 @@ public class FavoritesActivity extends AppCompatActivity {
         toMarket = findViewById(R.id.to_market);
 
         database = FirebaseDatabase.getInstance();
-        ref = database.getReference("users");
+        ref = database.getReference(Constants.FIREBASE_USERS);
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
 

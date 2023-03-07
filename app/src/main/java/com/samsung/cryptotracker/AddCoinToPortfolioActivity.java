@@ -69,7 +69,7 @@ public class AddCoinToPortfolioActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
         database = FirebaseDatabase.getInstance();;
-        ref = database.getReference("users");
+        ref = database.getReference(Constants.FIREBASE_USERS);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

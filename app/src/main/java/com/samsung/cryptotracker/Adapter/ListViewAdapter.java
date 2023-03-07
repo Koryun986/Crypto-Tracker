@@ -43,6 +43,8 @@ public class ListViewAdapter extends ArrayAdapter<JSONObject> {
     private DatabaseReference ref;
     private FirebaseAuth auth;
     private FirebaseUser user;
+    private final String listViewForSearch = "large";
+    private final String favoritesFirebase = "favorites";
     int listLayout;
     ArrayList<JSONObject> obj;
     Context context;
@@ -53,7 +55,7 @@ public class ListViewAdapter extends ArrayAdapter<JSONObject> {
         this.listLayout = listLayout;
         this.obj = obj;
         database = FirebaseDatabase.getInstance();
-        ref = database.getReference("users");
+        ref = database.getReference(Constants.FIREBASE_USERS);
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
     }
@@ -85,7 +87,7 @@ public class ListViewAdapter extends ArrayAdapter<JSONObject> {
             default:
         }
 
-        if (!obj.get(position).has("large")) {
+        if (!obj.get(position).has(listViewForSearch)) {
             try {
                 String name = obj.get(position).getString(Constants.CURRENCY_ID);
                 id.setText(name);
@@ -100,7 +102,7 @@ public class ListViewAdapter extends ArrayAdapter<JSONObject> {
                 ref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        DataSnapshot favorites = snapshot.child(user.getUid()).child("favorites");
+                        DataSnapshot favorites = snapshot.child(user.getUid()).child(favoritesFirebase);
                         for (DataSnapshot favCoinSnap: favorites.getChildren()){
                             String coin = favCoinSnap.getValue(String.class);
                             if (coin.equals(name)){
@@ -129,7 +131,7 @@ public class ListViewAdapter extends ArrayAdapter<JSONObject> {
                         ref.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                DataSnapshot favorites = snapshot.child(user.getUid()).child("favorites");
+                                DataSnapshot favorites = snapshot.child(user.getUid()).child(favoritesFirebase);
                                 boolean ifExist = false;
                                 for (DataSnapshot favCoinSnap: favorites.getChildren()){
                                     String coin = favCoinSnap.getValue(String.class);
@@ -143,7 +145,7 @@ public class ListViewAdapter extends ArrayAdapter<JSONObject> {
                                 if (!ifExist){
                                     coinsList.add(coinName);
                                 }
-                                ref.child(user.getUid()).child("favorites").setValue(coinsList);
+                                ref.child(user.getUid()).child(favoritesFirebase).setValue(coinsList);
                             }
 
                             @Override
@@ -161,12 +163,12 @@ public class ListViewAdapter extends ArrayAdapter<JSONObject> {
         }else{try {
             String name = obj.get(position).getString(Constants.CURRENCY_ID);
             id.setText(name);
-            Picasso.get().load(obj.get(position).getString("large")).into(icon);
-            coinName.setText(obj.get(position).getString("name"));
+            Picasso.get().load(obj.get(position).getString(listViewForSearch)).into(icon);
+            coinName.setText(obj.get(position).getString(Constants.CURRENCY_NAME));
             ref.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    DataSnapshot favorites = snapshot.child(user.getUid()).child("favorites");
+                    DataSnapshot favorites = snapshot.child(user.getUid()).child(favoritesFirebase);
                     for (DataSnapshot favCoinSnap: favorites.getChildren()){
                         String coin = favCoinSnap.getValue(String.class);
                         if (coin.equals(name)){
@@ -212,7 +214,7 @@ public class ListViewAdapter extends ArrayAdapter<JSONObject> {
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                DataSnapshot favorites = snapshot.child(user.getUid()).child("favorites");
+                DataSnapshot favorites = snapshot.child(user.getUid()).child(favoritesFirebase);
                 for (DataSnapshot favCoin: favorites.getChildren()){
                     String coin = favCoin.getValue(String.class);
                     if (coin.equals(coinName)){
@@ -224,7 +226,7 @@ public class ListViewAdapter extends ArrayAdapter<JSONObject> {
                 if (!ifExist[0]){
                     coinsList.add(coinName);
                 }
-                ref.child(user.getUid()).child("favorites").setValue(coinsList);
+                ref.child(user.getUid()).child(favoritesFirebase).setValue(coinsList);
             }
 
             @Override
