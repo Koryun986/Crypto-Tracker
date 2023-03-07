@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -67,10 +68,12 @@ public class MarketFragment extends Fragment {
 
     View view;
     ListView listView;
+    LinearLayout navigation;
     Spinner spinner;
     Toolbar toolbar;
     SearchView searchView;
     String[] spinnerValues = {"USD","EUR","RUB"};
+    ProgressBar progressBar;
 
 
     @Override
@@ -82,6 +85,8 @@ public class MarketFragment extends Fragment {
         spinner = view.findViewById(R.id.spinner);
         searchView = view.findViewById(R.id.search_bar);
         listView = view.findViewById(R.id.list_view);
+        progressBar = view.findViewById(R.id.progressBar);
+        navigation = view.findViewById(R.id.list_view_navigation);
         ExchangedCurrency exchangedCurrency = new ExchangedCurrency();
 
         Loader loader = new Loader();
@@ -163,24 +168,26 @@ public class MarketFragment extends Fragment {
         @Override
         public void run() {
             super.run();
+            navigation.setVisibility(View.GONE);
+            progressBar.setVisibility(View.VISIBLE);
             loadJsonFromUrl();
         }
     }
 
 
     private void loadJsonFromUrl() {
-        final ProgressBar progressBar = view.findViewById(R.id.progressBar);
         String url = Constants.API_URL();
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        progressBar.setVisibility(View.GONE);
                         try {
                             JSONArray jsonArray = new JSONArray(response);
                             ArrayList<JSONObject> item = getArrayListFromJSONArray(jsonArray);
                             ListAdapter listAdapter = new ListViewAdapter(getContext(), R.layout.row, R.id.container, item);
                             listView.setAdapter(listAdapter);
+                            progressBar.setVisibility(View.GONE);
+                            navigation.setVisibility(View.VISIBLE);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -190,6 +197,7 @@ public class MarketFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 progressBar.setVisibility(View.GONE);
+                navigation.setVisibility(View.VISIBLE);
                 error.printStackTrace();
             }
         });

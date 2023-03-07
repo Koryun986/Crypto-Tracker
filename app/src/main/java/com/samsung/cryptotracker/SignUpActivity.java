@@ -123,11 +123,13 @@ public class SignUpActivity extends AppCompatActivity {
 
                 if (TextUtils.isEmpty(email)) {
                     Toast.makeText(SignUpActivity.this, "Please enter email", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
                     return;
                 }
 
                 if (password.length() <= 6) {
                     Toast.makeText(SignUpActivity.this, "Please enter password", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
                     return;
                 }
 

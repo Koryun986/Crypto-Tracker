@@ -7,6 +7,8 @@
     tools:context=".PortfolioFragment"
     android:orientation="vertical">
 
+
+
     <LinearLayout
         android:id="@+id/add_to_portfolio"
         android:layout_width="match_parent"
@@ -72,6 +74,7 @@
                     android:visibility="gone"
                     android:textSize="25dp"
                     android:text="$"/>
+
             </LinearLayout>
         </LinearLayout>
 
@@ -82,5 +85,11 @@
         android:id="@+id/list_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_gravity="center"/>
 
 </LinearLayout>

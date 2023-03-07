@@ -41,12 +41,7 @@
                 android:textSize="17sp"
                 android:textStyle="bold" />
 
-<!--            <androidx.appcompat.widget.SearchView-->
-<!--                android:id="@+id/search_bar"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_gravity="right"-->
-<!--                app:queryHint="Search..."/>-->
+
         </com.google.android.material.appbar.MaterialToolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -60,63 +55,102 @@
         />
 
 
-    <TextView
-        android:id="@+id/coin_price"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:textSize="40sp"/>
-
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginVertical="10dp">
-        <TextView
-            android:id="@+id/chart_1d"
-            android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/blue_price"
-            android:background="@drawable/chart_days_btn_bg"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="5dp"
-            android:padding="5dp"
-            android:text="1D"/>
-        <TextView
-            android:id="@+id/chart_7d"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/chart_days_btn_bg"
-            android:textColor="@color/blue_price"
-            android:layout_marginRight="5dp"
-            android:padding="5dp"
-            android:text="7D"/>
-        <TextView
-            android:id="@+id/chart_1m"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/chart_days_btn_bg"
-            android:textColor="@color/orange"
-            android:padding="5dp"
-            android:layout_marginRight="5dp"
-            android:text="1M"/>
-        <TextView
-            android:id="@+id/chart_3m"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/chart_days_btn_bg"
-            android:textColor="@color/blue_price"
-            android:padding="5dp"
-            android:text="3M"/>
-    </LinearLayout>
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/coin_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:textSize="40sp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingVertical="5dp"
+                android:paddingHorizontal="10dp"
+                android:background="@drawable/btn_bg_disable"
+                android:layout_marginVertical="10dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center">
+                    <TextView
+                        android:id="@+id/chart_1d"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/blue_price"
+                        android:background="@drawable/chart_days_btn_bg"
+
+                        android:padding="5dp"
+                        android:text="1D"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center">
+                    <TextView
+                        android:id="@+id/chart_7d"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/chart_days_btn_bg"
+                        android:textColor="@color/blue_price"
+                        android:padding="5dp"
+                        android:text="7D"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center">
+                    <TextView
+                        android:id="@+id/chart_1m"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/chart_days_btn_bg"
+                        android:textColor="@color/orange"
+                        android:padding="5dp"
+                        android:text="1M"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center">
+                    <TextView
+                        android:id="@+id/chart_3m"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/chart_days_btn_bg"
+                        android:textColor="@color/blue_price"
+                        android:padding="5dp"
+                        android:text="3M"/>
+                </LinearLayout>
+
+            </LinearLayout>
 
 
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/line_chart"
-        android:layout_width="match_parent"
-        android:layout_height="460dp"
-        android:layout_marginBottom="168dp"
-        />
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/line_chart"
+                android:layout_width="match_parent"
+                android:layout_height="460dp"
+                android:layout_marginBottom="168dp"
+                />
+        </LinearLayout>
+    </ScrollView>
+
 
 
 </LinearLayout>

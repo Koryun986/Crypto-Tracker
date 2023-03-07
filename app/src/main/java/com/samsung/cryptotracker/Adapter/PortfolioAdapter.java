@@ -27,6 +27,7 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,19 +88,22 @@ public class PortfolioAdapter extends ArrayAdapter<JSONObject> {
         try {
             String name = obj.get(position).getString(Constants.CURRENCY_ID);
             id.setText(name);
-            double change = obj.get(position).getDouble(Constants.CURRENCY_MARKET_CUP_CHANGE);
+            Double currentPrice  = obj.get(position).getDouble(Constants.CURRENCY_PRICE);
             Picasso.get().load(obj.get(position).getString(Constants.CURRENCY_IMAGE)).into(icon);
             coinName.setText(obj.get(position).getString(Constants.CURRENCY_NAME));
-            coinPrice.setText(obj.get(position).getDouble(Constants.CURRENCY_PRICE) + exchangedCurrencySymbol);
-            coinChange.setText(change + "%");
-            coinChange.setTextColor(change >= 0 ? ContextCompat.getColor(context, R.color.green) : ContextCompat.getColor(context, R.color.red));
+            coinPrice.setText(currentPrice + exchangedCurrencySymbol);
             String finalExchangedCurrencySymbol = exchangedCurrencySymbol;
             ref.child(user.getUid()).child(portfolioFirebase).child(String.valueOf(id.getText())).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.child(portfolioCountFirebase).exists() && snapshot.child(portfolioPriceFirebase).exists()){
                         count.setText(snapshot.child(portfolioCountFirebase).getValue(Double.class).toString() + "x");
-                        coinBoughtPrice.setText(snapshot.child(portfolioPriceFirebase).getValue(Double.class).toString() + finalExchangedCurrencySymbol);
+                        Double boughtPrice = snapshot.child(portfolioPriceFirebase).getValue(Double.class);
+                        coinBoughtPrice.setText(boughtPrice.toString() + finalExchangedCurrencySymbol);
+                        DecimalFormat dec = new DecimalFormat("#0.00000");
+                        Double change = (currentPrice - boughtPrice) / boughtPrice;
+                        coinChange.setText(dec.format(change) + "%");
+                        coinChange.setTextColor(change >= 0 ? ContextCompat.getColor(context, R.color.green) : ContextCompat.getColor(context, R.color.red));
                     }
                 }
 

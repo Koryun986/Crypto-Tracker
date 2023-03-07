@@ -71,6 +71,7 @@ public class PortfolioFragment extends Fragment {
     ListView listView;
     TextView portfolioProfit;
     TextView dollarChar;
+    ProgressBar progressBar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -81,6 +82,7 @@ public class PortfolioFragment extends Fragment {
         listView = view.findViewById(R.id.list_view);
         portfolioProfit = view.findViewById(R.id.portfolio_profit);
         dollarChar = view.findViewById(R.id.dollar_char);
+        progressBar = view.findViewById(R.id.progress_bar);
 
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
@@ -99,6 +101,7 @@ public class PortfolioFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
+                    progressBar.setVisibility(View.VISIBLE);
                     dollarChar.setVisibility(View.VISIBLE);
                     portfolioProfit.setText("0");
                     portfolioMoney.setText("0");
@@ -131,6 +134,7 @@ public class PortfolioFragment extends Fragment {
     }
 
     private void loadJsonFromUrl(String url) {
+
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
@@ -162,8 +166,10 @@ public class PortfolioFragment extends Fragment {
                             }
                             ListAdapter listAdapter = new PortfolioAdapter(getApplicationContext(), R.layout.portfolio_row, R.id.container, item);
                             listView.setAdapter(listAdapter);
+                            progressBar.setVisibility(View.GONE);
 
                         } catch (JSONException e) {
+                            progressBar.setVisibility(View.GONE);
                             e.printStackTrace();
                         }
                     }
