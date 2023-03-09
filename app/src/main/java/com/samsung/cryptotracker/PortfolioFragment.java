@@ -1,6 +1,6 @@
 package com.samsung.cryptotracker;
 
-import static com.facebook.FacebookSdk.getApplicationContext;
+//import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.samsung.cryptotracker.Constants.getArrayListFromJSONArray;
 
 import android.content.Intent;
@@ -115,7 +115,7 @@ public class PortfolioFragment extends Fragment {
                     dollarChar.setVisibility(View.GONE);
                     portfolioProfit.setText("");
                     String arr[] = new String[0];
-                    ListAdapter listAdapter = new ArrayAdapter<String>(getApplicationContext(),
+                    ListAdapter listAdapter = new ArrayAdapter<String>(getContext(),
                             android.R.layout.simple_list_item_1,
                             arr);
 
@@ -164,7 +164,7 @@ public class PortfolioFragment extends Fragment {
                                     }
                                 });
                             }
-                            ListAdapter listAdapter = new PortfolioAdapter(getApplicationContext(), R.layout.portfolio_row, R.id.container, item);
+                            ListAdapter listAdapter = new PortfolioAdapter(getContext(), R.layout.portfolio_row, R.id.container, item);
                             listView.setAdapter(listAdapter);
                             progressBar.setVisibility(View.GONE);
 
@@ -179,7 +179,7 @@ public class PortfolioFragment extends Fragment {
                 error.printStackTrace();
             }
         });
-        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         requestQueue.add(stringRequest);
     }
 
@@ -193,11 +193,11 @@ public class PortfolioFragment extends Fragment {
         portfolioMoney.setText(String.valueOf(dec.format(finalMoney)));
         portfolioProfit.setText(String.valueOf(dec.format(finalPorfit)));
         if (finalPorfit >= 0) {
-            portfolioProfit.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.green));
-            dollarChar.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.green));
+            portfolioProfit.setTextColor(ContextCompat.getColor(getContext(), R.color.green));
+            dollarChar.setTextColor(ContextCompat.getColor(getContext(), R.color.green));
         }else {
-            portfolioProfit.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.red));
-            dollarChar.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.red));
+            portfolioProfit.setTextColor(ContextCompat.getColor(getContext(), R.color.red));
+            dollarChar.setTextColor(ContextCompat.getColor(getContext(), R.color.red));
         }
     }
 

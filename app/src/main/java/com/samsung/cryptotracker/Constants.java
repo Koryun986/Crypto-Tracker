@@ -20,6 +20,9 @@ public class Constants {
     public static final String CURRENCY_CHART (String name, int days) {
         return "https://api.coingecko.com/api/v3/coins/"+name+"/market_chart?vs_currency=usd&days=" + days;
     }
+    public static final String CURRENCY_PRICE_MARKETS (String name){
+        return "https://api.coingecko.com/api/v3/coins/"+name+"/tickers";
+    }
     public static final String CURRENCY_ID = "id";
     public static final String CURRENCY_NAME = "name";
     public static final String CURRENCY_IMAGE = "image";
