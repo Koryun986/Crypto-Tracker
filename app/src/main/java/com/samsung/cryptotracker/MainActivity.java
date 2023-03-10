@@ -2,8 +2,11 @@ package com.samsung.cryptotracker;
 
  import static com.samsung.cryptotracker.Constants.getArrayListFromJSONArray;
 
-import android.content.Intent;
-import android.os.Bundle;
+ import android.content.BroadcastReceiver;
+ import android.content.Intent;
+ import android.content.IntentFilter;
+ import android.net.ConnectivityManager;
+ import android.os.Bundle;
 
  import android.os.Handler;
  import android.util.Log;
@@ -61,8 +64,8 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseUser user;
     private FirebaseDatabase database;
     private DatabaseReference ref;
+    BroadcastReceiver broadcastReceiver = null;
     ListView listView;
-    Toolbar toolbar;
     BottomNavigationView navigationView;
 
 
@@ -79,6 +82,9 @@ public class MainActivity extends AppCompatActivity {
         user = auth.getCurrentUser();
         database = FirebaseDatabase.getInstance();;
         ref = database.getReference(Constants.FIREBASE_USERS);
+
+        broadcastReceiver = new InternetReceiver();
+        Internetstatus();
 
         ref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -133,6 +139,14 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void Internetstatus(){
+        registerReceiver(broadcastReceiver,new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(broadcastReceiver);
+    }
 
 }
