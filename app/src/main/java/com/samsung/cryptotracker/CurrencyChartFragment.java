@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -31,7 +32,10 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.samsung.cryptotracker.Adapter.CurrencyMarketPriceAdapter;
+import com.samsung.cryptotracker.Adapter.ListViewAdapter;
 import com.samsung.cryptotracker.Chart.ChartMarker;
+import com.samsung.cryptotracker.MVVM.ChartViewModel;
+import com.samsung.cryptotracker.MVVM.CurrencyInfoViewModel;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -70,7 +74,12 @@ public class CurrencyChartFragment extends Fragment {
         }
     }
 
+    private int defaultChartDays = 30;
+
     View view;
+
+    CurrencyInfoViewModel currencyInfoViewModel;
+    ChartViewModel chartViewModel;
 
     TextView price;
     String id;
@@ -89,6 +98,9 @@ public class CurrencyChartFragment extends Fragment {
 
         view = inflater.inflate(R.layout.fragment_currency_chart, container, false);
 
+        currencyInfoViewModel = new CurrencyInfoViewModel(getActivity().getApplication());
+        chartViewModel = new ChartViewModel(getActivity().getApplication());
+
         id = getArguments().getString("id");
         progressBar = view.findViewById(R.id.currency_activity_progress_bar);
         button1Day = view.findViewById(R.id.chart_1d);
@@ -98,9 +110,31 @@ public class CurrencyChartFragment extends Fragment {
         price = view.findViewById(R.id.coin_price);
         lineChart = view.findViewById(R.id.line_chart);
 
-        Loader loader = new Loader();
-        loader.start();
 
+
+        currencyInfoViewModel.getData().observe(getActivity(), data -> {
+            if (data != null) {
+                try {
+                    price.setText(data.get(0).getString(Constants.CURRENCY_PRICE) + "$");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        currencyInfoViewModel.loadCurrencyData(id);
+
+        chartViewModel.getData().observe(getActivity(), data-> {
+            LineDataSet set = new LineDataSet(data,"Data");
+            ArrayList<ILineDataSet> dataSet = new ArrayList<>();
+            lineDataSetStyle(set);
+            dataSet.add(set);
+            LineData lineData = new LineData(dataSet);
+            lineChart.setData(lineData);
+            lineChartStyle();
+        });
+
+        chartViewModel.loadChartData(id, defaultChartDays);
 
         button1Day.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,16 +166,7 @@ public class CurrencyChartFragment extends Fragment {
 
     }
 
-    class Loader extends Thread {
-        @Override
-        public void run() {
-            super.run();
-            String url = Constants.CURRENCY_URL(id);
-            loadCurrencyData(url);
-            loadChartData(Constants.CURRENCY_CHART(id, 30));
 
-        }
-    }
 
     private void lineChartStyle () {
         XAxis xAxis = lineChart.getXAxis();
@@ -184,84 +209,6 @@ public class CurrencyChartFragment extends Fragment {
     }
 
 
-    private void loadChartData (String url) {
-        progressBar.setVisibility(View.VISIBLE);
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            ArrayList<Entry> arr = getArr(jsonObject.getJSONArray("prices"));
-                            LineDataSet set = new LineDataSet(arr,"Data");
-                            ArrayList<ILineDataSet> dataSet = new ArrayList<>();
-                            lineDataSetStyle(set);
-                            dataSet.add(set);
-                            LineData lineData = new LineData(dataSet);
-                            lineChart.setData(lineData);
-                            lineChartStyle();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-            }
-        });
-        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-        requestQueue.add(stringRequest);
-        progressBar.setVisibility(View.GONE);
-    }
-
-
-
-    private void loadCurrencyData (String url) {
-        progressBar.setVisibility(View.VISIBLE);
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            progressBar.setVisibility(View.GONE);
-                            JSONArray jsonArray = new JSONArray(response);
-                            data = getArrayListFromJSONArray(jsonArray);
-                            price.setText(data.get(0).getString(Constants.CURRENCY_PRICE) + "$");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-            }
-        });
-        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-        requestQueue.add(stringRequest);
-    }
-
-    public static ArrayList<Entry> getArr(JSONArray jsonArray){
-        ArrayList<Entry> aList = new ArrayList<>();
-        try {
-            if(jsonArray!= null){
-                for(int i = 0; i< jsonArray.length();i++){
-
-                    float date = Float.valueOf(jsonArray.getJSONArray(i).get(0).toString());
-                    float value = Float.valueOf(jsonArray.getJSONArray(i).get(1).toString());
-
-                    aList.add(new Entry(date,value));
-                }
-
-            }
-
-        }catch (JSONException js){
-            js.printStackTrace();
-        }
-        return aList;
-    }
-
     public void chartDayButtonClickListener(View view, int days) {
 
         button1Day.setTextColor(ContextCompat.getColor(getContext(),R.color.blue_price));
@@ -284,7 +231,7 @@ public class CurrencyChartFragment extends Fragment {
                 break;
         }
 
-        loadChartData(Constants.CURRENCY_CHART(id, days));
+        chartViewModel.loadChartData(id, days);
     }
 
 

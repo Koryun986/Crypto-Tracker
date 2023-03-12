@@ -41,6 +41,7 @@ import com.google.android.material.navigation.NavigationBarView;
 import com.samsung.cryptotracker.Adapter.CurrencyMarketPriceAdapter;
 import com.samsung.cryptotracker.Adapter.ListViewAdapter;
 import com.samsung.cryptotracker.Chart.ChartMarker;
+import com.samsung.cryptotracker.MVVM.CurrencyInfoViewModel;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -51,16 +52,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class CurrencyActivity extends AppCompatActivity {
+
+    CurrencyInfoViewModel currencyInfoViewModel;
+
     ImageView icon;
     TextView name;
-    TextView price;
     String id;
     ArrayList<JSONObject> data;
-    LineChart lineChart;
-    TextView button1Day;
-    TextView button7Day;
-    TextView button1Month;
-    TextView button3Month;
     TextView backButton;
     BottomNavigationView navigationView;
 
@@ -69,9 +67,12 @@ public class CurrencyActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_currency);
+        currencyInfoViewModel = new CurrencyInfoViewModel(getApplication());
+
         Bundle extra = getIntent().getExtras();
         if (extra != null) {
             id = extra.getString("id");
+
         }
         Fragment chartFragment = new CurrencyChartFragment();
         Fragment marketsPriceFragment = new MarketsPriceFragment();
@@ -81,14 +82,22 @@ public class CurrencyActivity extends AppCompatActivity {
         chartFragment.setArguments(args);
         marketsPriceFragment.setArguments(args);
 
-
+        currencyInfoViewModel.getData().observe(this, data -> {
+            try {
+                Picasso.get().load(data.get(0).getString(Constants.CURRENCY_IMAGE)).into(icon);
+                name.setText(data.get(0).getString(Constants.CURRENCY_NAME));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        });
+        currencyInfoViewModel.loadCurrencyData(id);
         navigationView = findViewById(R.id.bottom_navigation_bar);
         icon = findViewById(R.id.coin_icon);
         name = findViewById(R.id.coin_name);
         backButton = findViewById(R.id.back_button);
 
-        Loader loader = new Loader();
-        loader.start();
+//        Loader loader = new Loader();
+//        loader.start();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment, chartFragment)
                 .commit();

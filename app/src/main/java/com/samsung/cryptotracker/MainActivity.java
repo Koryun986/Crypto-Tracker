@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
         ref = database.getReference(Constants.FIREBASE_USERS);
 
         broadcastReceiver = new InternetReceiver();
-        Internetstatus();
+        internetstatus();
 
         ref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -139,14 +139,14 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void Internetstatus(){
+    public void internetstatus(){
         registerReceiver(broadcastReceiver,new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterReceiver(broadcastReceiver);
-    }
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        unregisterReceiver(broadcastReceiver);
+//    }
 
 }
