@@ -4,6 +4,6 @@
         android:title="Chart"
         android:icon="@drawable/ic_chart_colum_svgrepo_com"/>
     <item android:id="@+id/market_price"
-        android:title="Markets Price"
+        android:title="Exchanges"
         android:icon="@drawable/ic_archive_cabinet_drawer_2_svgrepo_com"/>
 </menu>

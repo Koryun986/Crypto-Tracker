@@ -21,7 +21,7 @@ public class Constants {
         return "https://api.coingecko.com/api/v3/coins/"+name+"/market_chart?vs_currency=usd&days=" + days;
     }
     public static final String CURRENCY_PRICE_MARKETS (String name){
-        return "https://api.coingecko.com/api/v3/coins/"+name+"/tickers";
+        return "https://api.coingecko.com/api/v3/coins/"+name+"/tickers?include_exchange_logo=true";
     }
     public static final String CURRENCY_ID = "id";
     public static final String CURRENCY_NAME = "name";

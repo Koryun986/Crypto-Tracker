@@ -32,6 +32,15 @@ import java.util.ArrayList;
 
 public class CurrencyMarketPriceAdapter extends ArrayAdapter<JSONObject> {
 
+    private String MARKET = "market";
+    private String MARKET_NAME = "name";
+    private String MARKET_LOGO = "logo";
+    private String TARGET = "target";
+    private String LAST_CONVERTED = "converted_last";
+    private String LAST_CONVERTED_COIN = "usd";
+
+
+
     int listLayout;
     ArrayList<JSONObject> obj;
     Context context;
@@ -49,13 +58,15 @@ public class CurrencyMarketPriceAdapter extends ArrayAdapter<JSONObject> {
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View listViewItem = inflater.inflate(listLayout, null, false);
+        ImageView logo = listViewItem.findViewById(R.id.market_logo);
         TextView market =  listViewItem.findViewById(R.id.market_name);
         TextView price = listViewItem.findViewById(R.id.market_price);
 
         try {
-            String target = obj.get(position).getString("target");
-            String marketName = obj.get(position).getJSONObject("market").getString("name");
-            Double marketPrice = obj.get(position).getJSONObject("converted_last").getDouble("usd");
+            Picasso.get().load(obj.get(position).getJSONObject(MARKET).getString(MARKET_LOGO)).into(logo);
+            String target = obj.get(position).getString(TARGET);
+            String marketName = obj.get(position).getJSONObject(MARKET).getString(MARKET_NAME);
+            Double marketPrice = obj.get(position).getJSONObject(LAST_CONVERTED).getDouble(LAST_CONVERTED_COIN);
             market.setText(marketName);
             price.setText(marketPrice + " " +target);
 

@@ -75,7 +75,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18dp"
-            android:text="Buy"/>
+            android:text="Count"/>
         <EditText
             android:id="@+id/curency_count"
             android:layout_width="match_parent"
