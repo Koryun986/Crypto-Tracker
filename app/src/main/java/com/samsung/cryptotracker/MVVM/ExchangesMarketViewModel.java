@@ -27,6 +27,7 @@ import java.util.List;
 
 public class ExchangesMarketViewModel extends AndroidViewModel {
     private MutableLiveData<List<JSONObject>> mutableLiveData;
+    private String RESPONSE_ARRAY = "tickers";
 
     public ExchangesMarketViewModel(@NonNull Application application) {
         super(application);
@@ -45,8 +46,8 @@ public class ExchangesMarketViewModel extends AndroidViewModel {
                         @Override
                         public void onResponse(String response) {
                             try {
-                                JSONArray jsonArray = new JSONArray(response);
-                                ArrayList<JSONObject> item = getArrayListFromJSONArray(jsonArray);
+                                JSONObject obj = new JSONObject(response);
+                                ArrayList<JSONObject> item = getArrayListFromJSONArray(obj.getJSONArray(RESPONSE_ARRAY));
                                 mutableLiveData.postValue(item);
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -56,6 +57,7 @@ public class ExchangesMarketViewModel extends AndroidViewModel {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     error.printStackTrace();
+                    mutableLiveData.setValue(null);
                 }
             });
             RequestQueue requestQueue = Volley.newRequestQueue(getApplication());

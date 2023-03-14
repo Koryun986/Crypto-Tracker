@@ -72,7 +72,6 @@ public class CurrencyActivity extends AppCompatActivity {
         Bundle extra = getIntent().getExtras();
         if (extra != null) {
             id = extra.getString("id");
-
         }
         Fragment chartFragment = new CurrencyChartFragment();
         Fragment marketsPriceFragment = new MarketsPriceFragment();

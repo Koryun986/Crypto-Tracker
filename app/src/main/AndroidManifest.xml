@@ -21,7 +21,7 @@
             android:name=".ExchangesMarketActivity"
             android:exported="false" />
         <activity
-            android:name=".ExchagnesActivity"
+            android:name=".ExchangesActivity"
             android:exported="false" />
         <activity
             android:name=".ChangePassordActivity"

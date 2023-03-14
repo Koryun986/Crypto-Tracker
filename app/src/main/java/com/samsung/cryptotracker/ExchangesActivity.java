@@ -6,17 +6,20 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.samsung.cryptotracker.Adapter.ExchangesListAdapter;
 import com.samsung.cryptotracker.MVVM.ExchangesViewModel;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class ExchagnesActivity extends AppCompatActivity {
+public class ExchangesActivity extends AppCompatActivity {
 
     ExchangesViewModel exchangesViewModel;
 
@@ -38,9 +41,23 @@ public class ExchagnesActivity extends AppCompatActivity {
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ExchagnesActivity.this, MainActivity.class);
+                Intent intent = new Intent(ExchangesActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
+            }
+        });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                List<JSONObject> list = exchangesViewModel.getData().getValue();
+                Intent intent = new Intent(ExchangesActivity.this, ExchangesMarketActivity.class);
+                try {
+                    intent.putExtra("id", list.get(i).getString("name"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                startActivity(intent);
             }
         });
 

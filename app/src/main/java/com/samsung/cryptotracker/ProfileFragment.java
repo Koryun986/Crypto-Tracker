@@ -78,7 +78,7 @@ public class ProfileFragment extends Fragment {
         toExchanges.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), ExchagnesActivity.class);
+                Intent intent = new Intent(getActivity(), ExchangesActivity.class);
                 startActivity(intent);
                 getActivity().finish();
             }
