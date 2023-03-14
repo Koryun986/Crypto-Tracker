@@ -44,8 +44,10 @@ public class ProfileFragment extends Fragment {
     TextView logOutBtn;
     TextView profileEmail;
     ConstraintLayout toFavorites;
+    ConstraintLayout toExchanges;
     ConstraintLayout changePassword;
     TextView profileDelete;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -58,6 +60,7 @@ public class ProfileFragment extends Fragment {
         logOutBtn = view.findViewById(R.id.log_out);
         profileEmail = view.findViewById(R.id.profile_email);
         toFavorites = view.findViewById(R.id.profile_to_favorites);
+        toExchanges = view.findViewById(R.id.profile_exchanges);
         profileDelete = view.findViewById(R.id.profile_delete);
         changePassword = view.findViewById(R.id.profile_change_password);
 
@@ -67,6 +70,15 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), FavoritesActivity.class);
+                startActivity(intent);
+                getActivity().finish();
+            }
+        });
+
+        toExchanges.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), ExchagnesActivity.class);
                 startActivity(intent);
                 getActivity().finish();
             }
