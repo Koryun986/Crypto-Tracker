@@ -5,43 +5,62 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:gravity="center"
-    android:paddingHorizontal="10dp"
+    android:paddingHorizontal="15dp"
     android:paddingVertical="16dp">
-
     <TextView
         android:id="@+id/coin_id"
         android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
-
-    <ImageView
-        android:id="@+id/coin_icon"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_weight="1"/>
-
-    <TextView
-        android:id="@+id/coin_name"
-        android:layout_width="wrap_content"
-        android:maxWidth="60dp"
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textFontWeight="500"
-        android:textSize="20dp"
-        android:textColor="@color/blue_price" />
-
-    <TextView
-        android:id="@+id/coin_price"
-        android:layout_width="wrap_content"
+        android:gravity="left"
+        android:layout_weight="0.5">
+        <ImageView
+            android:id="@+id/coin_icon"
+            android:maxWidth="30dp"
+            android:maxHeight="30dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textSize="15dp"
-        android:textColor="@color/blue_price"
-        android:layout_weight="1"/>
+        android:gravity="left"
+        android:layout_weight="1">
+        <TextView
+            android:id="@+id/coin_name"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:maxWidth="70dp"
+            android:layout_height="wrap_content"
+            android:textFontWeight="500"
+            android:textSize="18dp"
+            android:textColor="@color/blue_price" />
+    </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:layout_weight="1">
+        <TextView
+            android:id="@+id/coin_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:textSize="15dp"
+            android:textColor="@color/blue_price"
+         />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:gravity="center"
         android:layout_weight="1">
         <TextView
             android:id="@+id/coin_change"
@@ -50,11 +69,21 @@
             android:textSize="15dp"
             android:layout_weight="1"/>
 
-        <TextView
-            android:id="@+id/coin_favorite"
+        <LinearLayout
             android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:background="@drawable/ic_baseline_favorite_border_24" />
+            android:minWidth="24dp"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:layout_weight="1">
+            <TextView
+                android:id="@+id/coin_favorite"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:minWidth="24dp"
+                android:minHeight="24dp"
+                android:background="@drawable/ic_baseline_favorite_border_24" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

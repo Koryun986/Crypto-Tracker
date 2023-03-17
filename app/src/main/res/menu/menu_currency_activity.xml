@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/chart"
+        android:title="Chart"
+        android:icon="@drawable/ic_chart_colum_svgrepo_com"/>
+    <item android:id="@+id/market_price"
+        android:title="Exchanges"
+        android:icon="@drawable/ic_archive_cabinet_drawer_2_svgrepo_com"/>
+</menu>

@@ -30,36 +30,44 @@
         </com.google.android.material.appbar.MaterialToolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
-
-
     <LinearLayout
         android:id="@+id/list_view_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/blue_dark"
         android:orientation="horizontal"
+        android:gravity="center_vertical"
+
         android:paddingHorizontal="16dp"
         android:paddingVertical="5dp">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="4"
+            android:layout_weight="1.5"
+            android:gravity="left"
             android:text="Crypto Currencies" />
 
-
-        <Spinner
-            android:id="@+id/spinner"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:popupBackground="@color/blue_dark"
-            android:spinnerMode="dropdown" />
+            android:gravity="left"
+            android:layout_weight="1">
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:popupBackground="@color/blue_dark"
+                android:spinnerMode="dropdown" />
+        </LinearLayout>
+
+
 
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:gravity="left"
             android:layout_weight="1"
             android:text="24h change" />
     </LinearLayout>
@@ -72,11 +80,17 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         />
-    <ListView
-        android:id="@+id/list_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ListView
+            android:id="@+id/list_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
 </LinearLayout>

@@ -20,6 +20,13 @@ public class Constants {
     public static final String CURRENCY_CHART (String name, int days) {
         return "https://api.coingecko.com/api/v3/coins/"+name+"/market_chart?vs_currency=usd&days=" + days;
     }
+    public static final String CURRENCY_PRICE_MARKETS (String name){
+        return "https://api.coingecko.com/api/v3/coins/"+name+"/tickers?include_exchange_logo=true";
+    }
+    public static final String API_EXCHANGES = "https://api.coingecko.com/api/v3/exchanges";
+    public static final String API_EXCHANGES_MARKET (String name) {
+        return "https://api.coingecko.com/api/v3/exchanges/"+name+"/tickers?include_exchange_logo=true&depth=true&order=true";
+    }
     public static final String CURRENCY_ID = "id";
     public static final String CURRENCY_NAME = "name";
     public static final String CURRENCY_IMAGE = "image";

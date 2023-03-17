@@ -5,15 +5,11 @@ import static com.samsung.cryptotracker.Constants.getArrayListFromJSONArray;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.os.Handler;
-import android.os.Looper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,19 +29,15 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
 import com.samsung.cryptotracker.Adapter.ListViewAdapter;
 import com.samsung.cryptotracker.Exchange.ExchangedCurrency;
+import com.samsung.cryptotracker.MVVM.MarketInfoViewModel;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
 
 
 public class MarketFragment extends Fragment {
@@ -69,11 +61,14 @@ public class MarketFragment extends Fragment {
     View view;
     ListView listView;
     LinearLayout navigation;
+    SwipeRefreshLayout swipeRefreshLayout;
     Spinner spinner;
     Toolbar toolbar;
     SearchView searchView;
     String[] spinnerValues = {"USD","EUR","RUB"};
     ProgressBar progressBar;
+    MarketInfoViewModel marketInfoViewModel;
+
 
 
     @Override
@@ -86,11 +81,32 @@ public class MarketFragment extends Fragment {
         searchView = view.findViewById(R.id.search_bar);
         listView = view.findViewById(R.id.list_view);
         progressBar = view.findViewById(R.id.progressBar);
+        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
         navigation = view.findViewById(R.id.list_view_navigation);
         ExchangedCurrency exchangedCurrency = new ExchangedCurrency();
 
-        Loader loader = new Loader();
-        loader.start();
+        marketInfoViewModel = new MarketInfoViewModel(getActivity().getApplication()) ;
+
+        marketInfoViewModel.getData().observe(getActivity(), data-> {
+            swipeRefreshLayout.setRefreshing(true);
+            if (data != null) {
+                ListAdapter listAdapter = new ListViewAdapter(getActivity(), R.layout.row, R.id.container, (ArrayList<JSONObject>) data);
+                listView.setAdapter(listAdapter);
+            }
+            swipeRefreshLayout.setRefreshing(false);
+        });
+
+        marketInfoViewModel.loadData();
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                marketInfoViewModel.loadData();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
+
 
 //      Tool Bar
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
@@ -120,8 +136,9 @@ public class MarketFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String name) {
                 if(name.length() == 0 ){
-                    loadJsonFromUrl();
+                    marketInfoViewModel.loadData();
                 }else{
+//                    searchViewModel.loadSearchData(name);
                     loadJsonFromUrlSearchView(Constants.SEARCH_CURRENCY, name);
 
                 }
@@ -149,7 +166,7 @@ public class MarketFragment extends Fragment {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 String value = adapterView.getItemAtPosition(i).toString().toLowerCase(Locale.ROOT);
                 ExchangedCurrency.exchangedCurrency = value;
-                loadJsonFromUrl();
+                marketInfoViewModel.loadData();
             }
 
             @Override
@@ -168,42 +185,11 @@ public class MarketFragment extends Fragment {
         @Override
         public void run() {
             super.run();
-            navigation.setVisibility(View.GONE);
-            progressBar.setVisibility(View.VISIBLE);
-            loadJsonFromUrl();
+            marketInfoViewModel.loadData();
+
         }
     }
 
-
-    private void loadJsonFromUrl() {
-        String url = Constants.API_URL();
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONArray jsonArray = new JSONArray(response);
-                            ArrayList<JSONObject> item = getArrayListFromJSONArray(jsonArray);
-                            ListAdapter listAdapter = new ListViewAdapter(getContext(), R.layout.row, R.id.container, item);
-                            listView.setAdapter(listAdapter);
-                            progressBar.setVisibility(View.GONE);
-                            navigation.setVisibility(View.VISIBLE);
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                progressBar.setVisibility(View.GONE);
-                navigation.setVisibility(View.VISIBLE);
-                error.printStackTrace();
-            }
-        });
-        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-        requestQueue.add(stringRequest);
-    }
 
     private void loadJsonFromUrlSearchView(String url, String name) {
         final ProgressBar progressBar = view.findViewById(R.id.progressBar);

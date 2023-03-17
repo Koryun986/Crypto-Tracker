@@ -4,6 +4,7 @@ import static com.samsung.cryptotracker.Constants.getArrayListFromJSONArray;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.samsung.cryptotracker.Adapter.ListViewAdapter;
 import com.samsung.cryptotracker.Exchange.ExchangedCurrency;
+import com.samsung.cryptotracker.MVVM.CurrencyInfoViewModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -47,6 +49,10 @@ public class FavoritesActivity extends AppCompatActivity {
     private DatabaseReference ref;
     private FirebaseAuth auth;
     private FirebaseUser user;
+
+    CurrencyInfoViewModel favoritesViewModel;
+
+    SwipeRefreshLayout swipeRefreshLayout;
     ListView listView;
     ImageView toMarket;
     Spinner spinner;
@@ -55,17 +61,38 @@ public class FavoritesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorites);
+
+        favoritesViewModel = new CurrencyInfoViewModel(getApplication());
+
         listView = findViewById(R.id.list_view);
         spinner = findViewById(R.id.spinner);
         toMarket = findViewById(R.id.to_market);
+        swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
 
         database = FirebaseDatabase.getInstance();
         ref = database.getReference(Constants.FIREBASE_USERS);
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
 
-        Loader loader = new Loader();
-        loader.start();
+
+        favoritesViewModel.getData().observe(this, data -> {
+            swipeRefreshLayout.setRefreshing(true);
+            if (data != null) {
+                ListAdapter listAdapter = new ListViewAdapter(getApplication(), R.layout.row, R.id.container, (ArrayList<JSONObject>) data);
+                listView.setAdapter(listAdapter);
+            }
+            swipeRefreshLayout.setRefreshing(false);
+        });
+
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getFavorites();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
 
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -108,43 +135,6 @@ public class FavoritesActivity extends AppCompatActivity {
     }
 
 
-    class Loader extends Thread{
-        @Override
-        public void run() {
-            super.run();
-            getFavorites();
-        }
-    }
-
-
-
-    private void loadJsonFromUrl(String url) {
-        final ProgressBar progressBar = findViewById(R.id.progressBar);
-        progressBar.setVisibility(View.VISIBLE);
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        progressBar.setVisibility(View.GONE);
-                        try {
-                            JSONArray jsonArray = new JSONArray(response);
-                            ArrayList<JSONObject> item = getArrayListFromJSONArray(jsonArray);
-                            ListAdapter listAdapter = new ListViewAdapter(getApplicationContext(), R.layout.row, R.id.container, item);
-                            listView.setAdapter(listAdapter);
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-            }
-        });
-        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-        requestQueue.add(stringRequest);
-    }
 
     private void getFavorites() {
         List<String> list = new ArrayList<>();
@@ -162,7 +152,7 @@ public class FavoritesActivity extends AppCompatActivity {
                     for (int i = 0; i < list.size(); i++) {
                         coins += "," + list.get(i);
                     }
-                    loadJsonFromUrl(Constants.CURRENCY_URL(coins));
+                    favoritesViewModel.loadCurrencyData(coins);
                 }
             }
 
