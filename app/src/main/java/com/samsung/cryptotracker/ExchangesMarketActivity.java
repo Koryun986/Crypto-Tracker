@@ -87,6 +87,7 @@ public class ExchangesMarketActivity extends AppCompatActivity {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
+                                        finish();
                                     }
                                 });
                 builder.create().show();
