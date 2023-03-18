@@ -75,13 +75,19 @@ public class MarketsPriceFragment extends Fragment {
 
         marketsPriceViewModel = new MarketsPriceViewModel(getActivity().getApplication());
 
+        marketsPriceViewModel.isInfoLoaded().observe(getActivity(), isLoaded -> {
+            if (isLoaded) {
+                swipeRefreshLayout.setRefreshing(true);
+            }else {
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
         marketsPriceViewModel.getData().observe(getActivity(), data -> {
-            swipeRefreshLayout.setRefreshing(true);
             if (data != null) {
                 CurrencyMarketPriceAdapter listAdapter = new CurrencyMarketPriceAdapter(getContext(), R.layout.currency_markets_row, R.id.container, (ArrayList<JSONObject>) data);
                 listView.setAdapter(listAdapter);
             }
-            swipeRefreshLayout.setRefreshing(false);
         });
 
         marketsPriceViewModel.loadData(id);

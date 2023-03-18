@@ -6,4 +6,7 @@
     <item android:id="@+id/market_price"
         android:title="Exchanges"
         android:icon="@drawable/ic_archive_cabinet_drawer_2_svgrepo_com"/>
+    <item android:id="@+id/currency_notifications"
+        android:title="Notifications"
+        android:icon="@drawable/ic_notification_svgrepo_com"/>
 </menu>

@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         listView = findViewById(R.id.list_view);
         navigationView = findViewById(R.id.bottom_navigation_bar);
         user = auth.getCurrentUser();
-        database = FirebaseDatabase.getInstance();;
+        database = FirebaseDatabase.getInstance();
         ref = database.getReference(Constants.FIREBASE_USERS);
 
         broadcastReceiver = new InternetReceiver();

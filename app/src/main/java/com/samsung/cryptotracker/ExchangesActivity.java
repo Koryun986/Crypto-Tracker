@@ -21,6 +21,9 @@ import java.util.List;
 
 public class ExchangesActivity extends AppCompatActivity {
 
+    private final String exchangesId = "id";
+    private final String exchangesName = "name";
+
     ExchangesViewModel exchangesViewModel;
 
     ListView listView;
@@ -53,7 +56,7 @@ public class ExchangesActivity extends AppCompatActivity {
                 List<JSONObject> list = exchangesViewModel.getData().getValue();
                 Intent intent = new Intent(ExchangesActivity.this, ExchangesMarketActivity.class);
                 try {
-                    intent.putExtra("id", list.get(i).getString("name"));
+                    intent.putExtra(exchangesId, list.get(i).getString(exchangesName));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -61,13 +64,19 @@ public class ExchangesActivity extends AppCompatActivity {
             }
         });
 
+        exchangesViewModel.isDataLoaded().observe(this, isLoaded -> {
+            if(isLoaded) {
+                swipeRefreshLayout.setRefreshing(true);
+            }else {
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
         exchangesViewModel.getData().observe(this, data -> {
-            swipeRefreshLayout.setRefreshing(true);
             if (data != null) {
                 ExchangesListAdapter listAdapter = new ExchangesListAdapter(this, R.layout.exchanges_row, R.id.container, (ArrayList<JSONObject>) data);
                 listView.setAdapter(listAdapter);
             }
-            swipeRefreshLayout.setRefreshing(false);
         });
 
         exchangesViewModel.loadData();

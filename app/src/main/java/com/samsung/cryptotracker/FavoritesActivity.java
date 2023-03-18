@@ -6,6 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -74,14 +76,33 @@ public class FavoritesActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
 
+        favoritesViewModel.isInfoLoaded().observe(this, isLoaded -> {
+            if (isLoaded) {
+                swipeRefreshLayout.setRefreshing(true);
+            }else {
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
 
         favoritesViewModel.getData().observe(this, data -> {
-            swipeRefreshLayout.setRefreshing(true);
             if (data != null) {
                 ListAdapter listAdapter = new ListViewAdapter(getApplication(), R.layout.row, R.id.container, (ArrayList<JSONObject>) data);
                 listView.setAdapter(listAdapter);
+            }else {
+                AlertDialog.Builder builder =
+                        new AlertDialog.Builder(this).
+                                setMessage("Oops Page Note Found").
+                                setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                        finish();
+                                    }
+                                });
+                builder.create().show();
             }
-            swipeRefreshLayout.setRefreshing(false);
+
         });
 
 

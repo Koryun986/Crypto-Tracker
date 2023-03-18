@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingHorizontal="20dp"
+    android:paddingTop="40dp"
+    tools:context=".NotificationsFragment">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="22dp"
+        android:layout_marginBottom="20dp"
+        android:textColor="@color/white"
+        android:text="Target Price"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingVertical="5dp"
+        android:gravity="center_horizontal"
+        android:layout_marginVertical="10dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="left">
+            <TextView
+                android:id="@+id/notification_minus_20perc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/blue_price"
+                android:background="@drawable/chart_days_btn_bg"
+
+                android:padding="5dp"
+                android:text="-20%"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="left">
+            <TextView
+                android:id="@+id/notification_minus_10perc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/blue_price"
+                android:background="@drawable/chart_days_btn_bg"
+
+                android:padding="5dp"
+                android:text="-10%"/>
+        </LinearLayout>
+            <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="left">
+            <TextView
+                android:id="@+id/notification_minus_5perc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/blue_price"
+                android:background="@drawable/chart_days_btn_bg"
+
+                android:padding="5dp"
+                android:text="-5%"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right">
+            <TextView
+                android:id="@+id/notification_plus_5perc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/chart_days_btn_bg"
+                android:textColor="@color/blue_price"
+                android:padding="5dp"
+                android:text="+5%"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right">
+            <TextView
+                android:id="@+id/notification_plus_10perc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/chart_days_btn_bg"
+                android:textColor="@color/blue_price"
+                android:padding="5dp"
+                android:text="+10%"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right">
+            <TextView
+                android:id="@+id/notification_plus_20perc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/chart_days_btn_bg"
+                android:textColor="@color/blue_price"
+                android:padding="5dp"
+                android:text="+20%"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/notification_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/login_edit_text_bg"
+        android:inputType="numberDecimal"
+        android:padding="10dp"
+        android:layout_marginBottom="30dp"
+        android:textColor="@color/blue_price"
+        android:textColorHint="@color/blue_price"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:textColor="@color/blue_price"
+        android:textSize="16dp"
+        android:text="You will receive a notification when the price hits target"/>
+    <TextView
+        android:id="@+id/save_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/login_register_btn_bg"
+        android:gravity="center"
+        android:paddingVertical="8dp"
+        android:text="Save"
+        android:textColor="@color/blue_bg"
+        android:textSize="25dp"
+        />
+
+</LinearLayout>

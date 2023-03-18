@@ -27,18 +27,24 @@ import java.util.List;
 
 public class ExchangesMarketViewModel extends AndroidViewModel {
     private MutableLiveData<List<JSONObject>> mutableLiveData;
+    private MutableLiveData<Boolean> isLoaded;
     private String RESPONSE_ARRAY = "tickers";
 
     public ExchangesMarketViewModel(@NonNull Application application) {
         super(application);
+        isLoaded = new MutableLiveData<>();
         mutableLiveData = new MutableLiveData<>();
     }
 
     public LiveData<List<JSONObject>> getData(){
         return  mutableLiveData;
     }
+    public LiveData<Boolean> isDataLoaded(){
+        return  isLoaded;
+    }
 
     public void loadData(String name){
+        isLoaded.setValue(true);
         AsyncTask.execute(() -> {
             String url = Constants.API_EXCHANGES_MARKET(name);
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -46,6 +52,7 @@ public class ExchangesMarketViewModel extends AndroidViewModel {
                         @Override
                         public void onResponse(String response) {
                             try {
+                                isLoaded.setValue(false);
                                 JSONObject obj = new JSONObject(response);
                                 ArrayList<JSONObject> item = getArrayListFromJSONArray(obj.getJSONArray(RESPONSE_ARRAY));
                                 mutableLiveData.postValue(item);
@@ -58,6 +65,7 @@ public class ExchangesMarketViewModel extends AndroidViewModel {
                 public void onErrorResponse(VolleyError error) {
                     error.printStackTrace();
                     mutableLiveData.setValue(null);
+                    isLoaded.setValue(false);
                 }
             });
             RequestQueue requestQueue = Volley.newRequestQueue(getApplication());

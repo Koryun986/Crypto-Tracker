@@ -2,6 +2,8 @@ package com.samsung.cryptotracker;
 
 import static com.samsung.cryptotracker.Constants.getArrayListFromJSONArray;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -87,13 +89,31 @@ public class MarketFragment extends Fragment {
 
         marketInfoViewModel = new MarketInfoViewModel(getActivity().getApplication()) ;
 
+        marketInfoViewModel.isMarketLoaded().observe(getActivity(), isLoaded -> {
+            if (isLoaded) {
+                swipeRefreshLayout.setRefreshing(true);
+            }else {
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
         marketInfoViewModel.getData().observe(getActivity(), data-> {
-            swipeRefreshLayout.setRefreshing(true);
             if (data != null) {
                 ListAdapter listAdapter = new ListViewAdapter(getActivity(), R.layout.row, R.id.container, (ArrayList<JSONObject>) data);
                 listView.setAdapter(listAdapter);
+            }else {
+                AlertDialog.Builder builder =
+                        new AlertDialog.Builder(getActivity()).
+                                setMessage("Oops Page Note Found").
+                                setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                builder.create().show();
             }
-            swipeRefreshLayout.setRefreshing(false);
+
         });
 
         marketInfoViewModel.loadData();

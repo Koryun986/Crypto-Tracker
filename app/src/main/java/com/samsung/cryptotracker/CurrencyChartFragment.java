@@ -2,6 +2,8 @@ package com.samsung.cryptotracker;
 
 import static com.samsung.cryptotracker.Constants.getArrayListFromJSONArray;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -111,6 +113,15 @@ public class CurrencyChartFragment extends Fragment {
         lineChart = view.findViewById(R.id.line_chart);
 
 
+        currencyInfoViewModel.isInfoLoaded().observe(getActivity(), isLoaded -> {
+            if (isLoaded) {
+                progressBar.setVisibility(View.VISIBLE);
+            }else {
+                progressBar.setVisibility(View.GONE);
+            }
+        });
+
+
 
         currencyInfoViewModel.getData().observe(getActivity(), data -> {
             if (data != null) {
@@ -119,10 +130,30 @@ public class CurrencyChartFragment extends Fragment {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+            }else {
+                AlertDialog.Builder builder =
+                        new AlertDialog.Builder(getContext()).
+                                setMessage("Oops Page Note Found").
+                                setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                        getActivity().finish();
+                                    }
+                                });
+                builder.create().show();
             }
         });
 
         currencyInfoViewModel.loadCurrencyData(id);
+
+        chartViewModel.isChartLoaded().observe(getActivity(), isLoaded -> {
+            if (isLoaded){
+                progressBar.setVisibility(View.VISIBLE);
+            }else {
+                progressBar.setVisibility(View.GONE);
+            }
+        });
 
         chartViewModel.getData().observe(getActivity(), data-> {
             LineDataSet set = new LineDataSet(data,"Data");

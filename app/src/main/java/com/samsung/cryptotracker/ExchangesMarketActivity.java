@@ -28,11 +28,13 @@ public class ExchangesMarketActivity extends AppCompatActivity {
 
     ExchangesMarketViewModel exchangesMarketViewModel;
 
+    private final String idParam = "id";
+
     private String id;
-    private String RESPONSE_MARKET = "market";
-    private String RESPONSE_MARKET_NAME = "name";
-    private String RESPONSE_MARKET_LOGO = "logo";
-    private String TRADE_URL = "trade_url";
+    private final String RESPONSE_MARKET = "market";
+    private final String RESPONSE_MARKET_NAME = "name";
+    private final String RESPONSE_MARKET_LOGO = "logo";
+    private final String TRADE_URL = "trade_url";
 
     ImageView backBtn;
     ImageView exchangesLogo;
@@ -47,7 +49,7 @@ public class ExchangesMarketActivity extends AppCompatActivity {
 
         Bundle extra = getIntent().getExtras();
         if (extra != null) {
-            id = extra.getString("id");
+            id = extra.getString(idParam);
         }
 
         exchangesMarketViewModel = new ExchangesMarketViewModel(getApplication());
@@ -67,8 +69,15 @@ public class ExchangesMarketActivity extends AppCompatActivity {
             }
         });
 
+        exchangesMarketViewModel.isDataLoaded().observe(this, isLoaded -> {
+            if (isLoaded){
+                swipeRefreshLayout.setRefreshing(true);
+            }else {
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
         exchangesMarketViewModel.getData().observe(this, data -> {
-            swipeRefreshLayout.setRefreshing(true);
             if (data != null) {
                 List<JSONObject> list = data;
                 try {
@@ -92,7 +101,6 @@ public class ExchangesMarketActivity extends AppCompatActivity {
                                 });
                 builder.create().show();
             }
-            swipeRefreshLayout.setRefreshing(false);
         });
 
         exchangesMarketViewModel.loadData(id);

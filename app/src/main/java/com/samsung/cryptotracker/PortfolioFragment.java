@@ -61,6 +61,10 @@ public class PortfolioFragment extends Fragment {
 
     }
 
+    private final String portfolioFirebase = "portfolio";
+    private final String priceFirebase = "price";
+    private final String countFirebase = "count";
+
     private FirebaseAuth auth;
     private FirebaseUser user;
     private FirebaseDatabase database;
@@ -97,7 +101,7 @@ public class PortfolioFragment extends Fragment {
             }
         });
 
-        ref.child(user.getUid()).child("portfolio").addValueEventListener(new ValueEventListener() {
+        ref.child(user.getUid()).child(portfolioFirebase).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
@@ -145,12 +149,12 @@ public class PortfolioFragment extends Fragment {
                             for (JSONObject obj : item){
                                 String id = obj.getString(Constants.CURRENCY_ID);
                                 Double price = obj.getDouble(Constants.CURRENCY_PRICE);
-                                ref.child(user.getUid()).child("portfolio").child(id).addValueEventListener(new ValueEventListener() {
+                                ref.child(user.getUid()).child(portfolioFirebase).child(id).addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         if (snapshot.exists()){
-                                            Double boughtPrice = snapshot.child("price").getValue(Double.class);
-                                            Double count = snapshot.child("count").getValue(Double.class);
+                                            Double boughtPrice = snapshot.child(priceFirebase).getValue(Double.class);
+                                            Double count = snapshot.child(countFirebase).getValue(Double.class);
                                             Double money = count * price;
                                             Double profit =  money - count*boughtPrice;
                                             setPortfolioMoney(money, profit);
