@@ -55,6 +55,8 @@ import java.util.ArrayList;
 
 public class CurrencyActivity extends AppCompatActivity {
 
+    private static final String argId = "id";
+
     CurrencyInfoViewModel currencyInfoViewModel;
 
     ImageView icon;
@@ -73,7 +75,7 @@ public class CurrencyActivity extends AppCompatActivity {
 
         Bundle extra = getIntent().getExtras();
         if (extra != null) {
-            id = extra.getString("id");
+            id = extra.getString(argId);
         }
         Fragment chartFragment = new CurrencyChartFragment();
         Fragment marketsPriceFragment = new MarketsPriceFragment();

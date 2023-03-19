@@ -2,19 +2,28 @@ package com.samsung.cryptotracker;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.samsung.cryptotracker.MVVM.CurrencyInfoViewModel;
 
 import org.json.JSONException;
@@ -24,14 +33,19 @@ import java.text.DecimalFormat;
 
 public class NotificationsFragment extends Fragment {
 
+    private static final String TOAST_MESSAGE = "Please enter price";
+    private static final String TOAST_MESSAGE_LOW_PRICE = "Please enter lower price then the current one";
+    private static final String TOAST_MESSAGE_HIGH_PRICE = "Please enter higher price then the current one";
+
     private static final String param = "id";
-    private static final String firebaseNotifications = "notifications";
     private static final String minus20 = "-20%";
     private static final String minus10 = "-10%";
     private static final String minus5 = "-5%";
     private static final String plus5 = "5%";
     private static final String plus10 = "10%";
     private static final String plus20 = "20%";
+    private static final String formatPattern = "#0.0";
+
     private FirebaseAuth auth;
     private FirebaseUser user;
     private FirebaseDatabase database;
@@ -70,7 +84,14 @@ public class NotificationsFragment extends Fragment {
     TextView plus5Btn;
     TextView plus10Btn;
     TextView plus20Btn;
-    TextView saveBtn;
+    LinearLayout highBtn;
+    LinearLayout lowBtn;
+    LinearLayout highPriceLayout;
+    LinearLayout lowPriceLayout;
+    TextView highPrice;
+    TextView lowPrice;
+    ImageView deleteHighPrice;
+    ImageView deleteLowerPrice;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -84,13 +105,59 @@ public class NotificationsFragment extends Fragment {
         ref = database.getReference(Constants.FIREBASE_USERS);
 
         notificationPrice = view.findViewById(R.id.notification_price);
-        saveBtn = view.findViewById(R.id.save_btn);
+        highPriceLayout = view.findViewById(R.id.current_high_notification);
+        lowPriceLayout = view.findViewById(R.id.current_low_notification);
+        highPrice = view.findViewById(R.id.current_high_price);
+        lowPrice = view.findViewById(R.id.current_low_price);
+        highBtn = view.findViewById(R.id.high_btn);
+        lowBtn = view.findViewById(R.id.low_btn);
+        deleteHighPrice = view.findViewById(R.id.notification_delete_higher_price);
+        deleteLowerPrice = view.findViewById(R.id.notification_delete_lower_price);
         minus20Btn = view.findViewById(R.id.notification_minus_20perc);
         minus10Btn = view.findViewById(R.id.notification_minus_10perc);
         minus5Btn = view.findViewById(R.id.notification_minus_5perc);
         plus5Btn = view.findViewById(R.id.notification_plus_5perc);
         plus10Btn = view.findViewById(R.id.notification_plus_10perc);
         plus20Btn = view.findViewById(R.id.notification_plus_20perc);
+
+        deleteHighPrice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ref.child(user.getUid()).child(Constants.FIREBASE_NOTIFICATIONS).child(id).child(Constants.FIREBASE_NOTIFICATIONS_HIGH).removeValue();
+            }
+        });
+        deleteLowerPrice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ref.child(user.getUid()).child(Constants.FIREBASE_NOTIFICATIONS).child(id).child(Constants.FIREBASE_NOTIFICATIONS_LOW).removeValue();
+            }
+        });
+
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                DataSnapshot notificationSnap = snapshot.child(user.getUid()).child(Constants.FIREBASE_NOTIFICATIONS).child(id);
+                if (notificationSnap.exists()) {
+                    if (notificationSnap.child(Constants.FIREBASE_NOTIFICATIONS_HIGH).exists()){
+                        highPriceLayout.setVisibility(View.VISIBLE);
+                        highPrice.setText(notificationSnap.child(Constants.FIREBASE_NOTIFICATIONS_HIGH).getValue(Double.class).toString());
+                    }else {
+                        highPriceLayout.setVisibility(View.GONE);
+                    }
+                    if (notificationSnap.child(Constants.FIREBASE_NOTIFICATIONS_LOW).exists()){
+                        lowPriceLayout.setVisibility(View.VISIBLE);
+                        lowPrice.setText(notificationSnap.child(Constants.FIREBASE_NOTIFICATIONS_LOW).getValue(Double.class).toString());
+                    }else {
+                        lowPriceLayout.setVisibility(View.GONE);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         CurrencyInfoViewModel currencyInfoViewModel = new CurrencyInfoViewModel(getActivity().getApplication());
         currencyInfoViewModel.getData().observe(getActivity(), data -> {
@@ -105,11 +172,35 @@ public class NotificationsFragment extends Fragment {
         });
         currencyInfoViewModel.loadCurrencyData(id);
 
-        saveBtn.setOnClickListener(new View.OnClickListener() {
+        highBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Double price = Double.valueOf(notificationPrice.getText().toString());
-                ref.child(user.getUid()).child(firebaseNotifications).child(id).setValue(price);
+                if (!TextUtils.isEmpty(notificationPrice.getText().toString())) {
+                    Double price = Double.valueOf(notificationPrice.getText().toString());
+                    if (price <= currentPrice) {
+                        Toast.makeText(getContext(), TOAST_MESSAGE_HIGH_PRICE, Toast.LENGTH_SHORT).show();
+                    }else {
+                        ref.child(user.getUid()).child(Constants.FIREBASE_NOTIFICATIONS).child(id).child(Constants.FIREBASE_NOTIFICATIONS_HIGH).setValue(price);
+                        }
+                }else {
+                    Toast.makeText(getContext(), TOAST_MESSAGE, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        lowBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!TextUtils.isEmpty(notificationPrice.getText().toString())) {
+                    Double price = Double.valueOf(notificationPrice.getText().toString());
+                    if (price >= currentPrice) {
+                        Toast.makeText(getContext(), TOAST_MESSAGE_LOW_PRICE, Toast.LENGTH_SHORT).show();
+                    }else {
+                        ref.child(user.getUid()).child(Constants.FIREBASE_NOTIFICATIONS).child(id).child(Constants.FIREBASE_NOTIFICATIONS_LOW).setValue(price);
+                    }
+                } else {
+                    Toast.makeText(getContext(), TOAST_MESSAGE, Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -193,7 +284,7 @@ public class NotificationsFragment extends Fragment {
             default:
                 throw new IllegalStateException("Unexpected value: " + percent);
         }
-        DecimalFormat dec = new DecimalFormat("#0.0");
+        DecimalFormat dec = new DecimalFormat(formatPattern);
         notificationPrice.setText(dec.format(price));
     }
 }

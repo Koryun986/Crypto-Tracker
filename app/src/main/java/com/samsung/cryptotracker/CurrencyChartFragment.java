@@ -52,6 +52,9 @@ public class CurrencyChartFragment extends Fragment {
 
 
     private static final String ARG_PARAM = "id";
+    private static final String ALERT_MESSAGE = "Oops Page Note Found";
+    private static final String ALERT_CANCEL = "Cancel";
+    private static final String CHART_LABEL = "Data";
 
     private String mParam1;
 
@@ -103,7 +106,7 @@ public class CurrencyChartFragment extends Fragment {
         currencyInfoViewModel = new CurrencyInfoViewModel(getActivity().getApplication());
         chartViewModel = new ChartViewModel(getActivity().getApplication());
 
-        id = getArguments().getString("id");
+        id = getArguments().getString(ARG_PARAM);
         progressBar = view.findViewById(R.id.currency_activity_progress_bar);
         button1Day = view.findViewById(R.id.chart_1d);
         button7Day = view.findViewById(R.id.chart_7d);
@@ -133,8 +136,8 @@ public class CurrencyChartFragment extends Fragment {
             }else {
                 AlertDialog.Builder builder =
                         new AlertDialog.Builder(getContext()).
-                                setMessage("Oops Page Note Found").
-                                setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
+                                setMessage(ALERT_MESSAGE).
+                                setPositiveButton(ALERT_CANCEL, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
@@ -156,7 +159,7 @@ public class CurrencyChartFragment extends Fragment {
         });
 
         chartViewModel.getData().observe(getActivity(), data-> {
-            LineDataSet set = new LineDataSet(data,"Data");
+            LineDataSet set = new LineDataSet(data,CHART_LABEL);
             ArrayList<ILineDataSet> dataSet = new ArrayList<>();
             lineDataSetStyle(set);
             dataSet.add(set);

@@ -45,12 +45,14 @@ import com.android.volley.toolbox.Volley;
  import com.google.firebase.database.DatabaseReference;
  import com.google.firebase.database.FirebaseDatabase;
  import com.google.firebase.database.ValueEventListener;
+ import com.google.firebase.messaging.FirebaseMessagingService;
  import com.samsung.cryptotracker.Adapter.ListViewAdapter;
 
 import com.samsung.cryptotracker.Exchange.ExchangedCurrency;
+ import com.samsung.cryptotracker.MVVM.CurrencyInfoViewModel;
 
 
-import org.json.JSONArray;
+ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -64,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseUser user;
     private FirebaseDatabase database;
     private DatabaseReference ref;
+    CurrencyInfoViewModel notificationModel;
     BroadcastReceiver broadcastReceiver = null;
     ListView listView;
     BottomNavigationView navigationView;
@@ -74,6 +77,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        notificationModel = new CurrencyInfoViewModel(getApplication());
 
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
@@ -89,9 +94,20 @@ public class MainActivity extends AppCompatActivity {
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (!snapshot.child(user.getUid()).exists()) {
+                DataSnapshot userSnap = snapshot.child(user.getUid());
+                if (!userSnap.exists()) {
                     User userClass = new User(user.getEmail());
-                    snapshot.child(user.getUid()).getRef().setValue(userClass);
+                    userSnap.getRef().setValue(userClass);
+                }else {
+                    DataSnapshot notificationsSnap = snapshot.child(user.getUid()).child(Constants.FIREBASE_NOTIFICATIONS);
+                    if (notificationsSnap.exists()){
+                        String coins = "";
+                        for (DataSnapshot snap : notificationsSnap.getChildren()){
+                            coins += "," + snap.getKey();
+                        }
+                        notificationModel.loadCurrencyData(coins);
+
+                    }
                 }
             }
 
@@ -101,6 +117,34 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+//        notificationModel.getData().observe(this, data -> {
+//            if (data != null) {
+//                for (JSONObject obj : data){
+//                    try {
+//                        String id = obj.getString(Constants.CURRENCY_ID);
+//                        Double price = obj.getDouble(Constants.CURRENCY_PRICE);
+//                        DatabaseReference notificationRef = ref.child(user.getUid()).child(Constants.FIREBASE_NOTIFICATIONS).child(id).getRef();
+//                        notificationRef.addValueEventListener(new ValueEventListener() {
+//                            @Override
+//                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                                if (price >= snapshot.child(Constants.FIREBASE_NOTIFICATIONS_HIGH).getValue(Double.class)){
+//
+//                                }else if (price <= snapshot.child(Constants.FIREBASE_NOTIFICATIONS_LOW).getValue(Double.class)){
+//
+//                                }
+//                            }
+//
+//                            @Override
+//                            public void onCancelled(@NonNull DatabaseError error) {
+//
+//                            }
+//                        });
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//        });
 
         Fragment marketFragment = new MarketFragment();
         Fragment portfolioFragment = new PortfolioFragment();
@@ -143,10 +187,5 @@ public class MainActivity extends AppCompatActivity {
         registerReceiver(broadcastReceiver,new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        unregisterReceiver(broadcastReceiver);
-//    }
 
 }

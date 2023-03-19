@@ -33,6 +33,10 @@ public class Constants {
     public static final String CURRENCY_PRICE = "current_price";
     public static final String CURRENCY_MARKET_CUP_CHANGE = "market_cap_change_percentage_24h";
     public static final String FIREBASE_USERS = "users";
+    public static final String FIREBASE_NOTIFICATIONS = "notifications";
+    public static final String FIREBASE_FAVORITES = "favorites";
+    public static final String FIREBASE_NOTIFICATIONS_HIGH = "high";
+    public static final String FIREBASE_NOTIFICATIONS_LOW = "low";
     public static ArrayList<JSONObject> getArrayListFromJSONArray(JSONArray jsonArray){
         ArrayList< JSONObject> aList = new ArrayList< JSONObject>();
         try {

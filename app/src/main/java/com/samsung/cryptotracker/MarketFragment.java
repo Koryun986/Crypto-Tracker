@@ -44,6 +44,10 @@ import java.util.Locale;
 
 public class MarketFragment extends Fragment {
 
+    private static final String ALERT_MESSAGE = "Oops Page Note Found";
+    private static final String ALERT_CANCEL = "Cancel";
+    private static final String ARG_ID = "id";
+
 
     public MarketFragment() {
     }
@@ -104,8 +108,8 @@ public class MarketFragment extends Fragment {
             }else {
                 AlertDialog.Builder builder =
                         new AlertDialog.Builder(getActivity()).
-                                setMessage("Oops Page Note Found").
-                                setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
+                                setMessage(ALERT_MESSAGE).
+                                setPositiveButton(ALERT_CANCEL, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
@@ -172,7 +176,7 @@ public class MarketFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 TextView id = view.findViewById(R.id.coin_id);
                 Intent intent = new Intent(getContext(), CurrencyActivity.class);
-                intent.putExtra("id", id.getText());
+                intent.putExtra(ARG_ID, id.getText());
                 startActivity(intent);
             }
         });

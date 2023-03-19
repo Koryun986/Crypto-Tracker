@@ -47,6 +47,8 @@ import java.util.Arrays;
 
 public class SignUpActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 1000;
+    private final static String PUBLIC_PROFILE = "public_profile";
+    private final static String AUTH_FAIL = "Authentication failed.";
     private Boolean isClosedEye = false;
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
@@ -156,7 +158,7 @@ public class SignUpActivity extends AppCompatActivity {
                                     });
 
                                 } else {
-                                    Toast.makeText(SignUpActivity.this, "Authentication failed.",
+                                    Toast.makeText(SignUpActivity.this, AUTH_FAIL,
                                             Toast.LENGTH_SHORT).show();
 
                                 }
@@ -177,7 +179,7 @@ public class SignUpActivity extends AppCompatActivity {
         facebookSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LoginManager.getInstance().logInWithReadPermissions(SignUpActivity.this,Arrays.asList("public_profile"));
+                LoginManager.getInstance().logInWithReadPermissions(SignUpActivity.this,Arrays.asList(PUBLIC_PROFILE));
                 LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
@@ -252,7 +254,7 @@ public class SignUpActivity extends AppCompatActivity {
                             authSuccess();
                         } else {
                             // If sign in fails, display a message to the user.
-                            Toast.makeText(getApplicationContext(), "Authentication failed.",
+                            Toast.makeText(getApplicationContext(), AUTH_FAIL,
                                     Toast.LENGTH_SHORT).show();
                         }
                     }

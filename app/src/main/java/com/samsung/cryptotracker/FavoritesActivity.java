@@ -47,6 +47,9 @@ import java.util.List;
 import java.util.Locale;
 
 public class FavoritesActivity extends AppCompatActivity {
+    private static final String idArg = "id";
+
+
     private FirebaseDatabase database;
     private DatabaseReference ref;
     private FirebaseAuth auth;
@@ -121,7 +124,7 @@ public class FavoritesActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 TextView id = view.findViewById(R.id.coin_id);
                 Intent intent = new Intent(getApplicationContext(), CurrencyActivity.class);
-                intent.putExtra("id", id.getText());
+                intent.putExtra(idArg, id.getText());
                 startActivity(intent);
             }
         });
@@ -162,7 +165,7 @@ public class FavoritesActivity extends AppCompatActivity {
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                DataSnapshot favorites = snapshot.child(user.getUid()).child("favorites");
+                DataSnapshot favorites = snapshot.child(user.getUid()).child(Constants.FIREBASE_FAVORITES);
                 for (DataSnapshot favCoin: favorites.getChildren()) {
                     String coin = favCoin.getValue(String.class);
                     list.add(coin);

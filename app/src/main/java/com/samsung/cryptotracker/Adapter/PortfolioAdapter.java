@@ -39,6 +39,8 @@ public class PortfolioAdapter extends ArrayAdapter<JSONObject> {
     private final String portfolioFirebase = "portfolio";
     private final String portfolioCountFirebase = "count";
     private final String portfolioPriceFirebase = "price";
+    private final String percentSymbol = "%";
+    private final String formatPattern = "#0.00000";
     int listLayout;
     ArrayList<JSONObject> obj;
     Context context;
@@ -100,9 +102,9 @@ public class PortfolioAdapter extends ArrayAdapter<JSONObject> {
                         count.setText(snapshot.child(portfolioCountFirebase).getValue(Double.class).toString() + "x");
                         Double boughtPrice = snapshot.child(portfolioPriceFirebase).getValue(Double.class);
                         coinBoughtPrice.setText(boughtPrice.toString() + finalExchangedCurrencySymbol);
-                        DecimalFormat dec = new DecimalFormat("#0.00000");
+                        DecimalFormat dec = new DecimalFormat(formatPattern);
                         Double change = (currentPrice - boughtPrice) / boughtPrice;
-                        coinChange.setText(dec.format(change) + "%");
+                        coinChange.setText(dec.format(change) + percentSymbol);
                         coinChange.setTextColor(change >= 0 ? ContextCompat.getColor(context, R.color.green) : ContextCompat.getColor(context, R.color.red));
                     }
                 }

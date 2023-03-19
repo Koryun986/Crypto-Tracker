@@ -28,7 +28,9 @@ public class ExchangesMarketActivity extends AppCompatActivity {
 
     ExchangesMarketViewModel exchangesMarketViewModel;
 
-    private final String idParam = "id";
+    private static final String idParam = "id";
+    private static final String ALERT_MESSAGE = "Oops Page Note Found";
+    private static final String ALERT_CANCEL = "Cancel";
 
     private String id;
     private final String RESPONSE_MARKET = "market";
@@ -91,8 +93,8 @@ public class ExchangesMarketActivity extends AppCompatActivity {
             }else {
                 AlertDialog.Builder builder =
                         new AlertDialog.Builder(this).
-                                setMessage("Oops Page Note Found").
-                                setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
+                                setMessage(ALERT_MESSAGE).
+                                setPositiveButton(ALERT_CANCEL, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();

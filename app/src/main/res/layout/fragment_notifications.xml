@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingHorizontal="20dp"
-    android:paddingTop="40dp"
+
     tools:context=".NotificationsFragment">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="20dp"
+        android:paddingTop="40dp"
+>
 
     <TextView
         android:layout_width="wrap_content"
@@ -135,16 +140,124 @@
         android:textColor="@color/blue_price"
         android:textSize="16dp"
         android:text="You will receive a notification when the price hits target"/>
-    <TextView
-        android:id="@+id/save_btn"
+
+    <LinearLayout
+        android:id="@+id/high_btn"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/login_register_btn_bg"
-        android:gravity="center"
         android:paddingVertical="8dp"
-        android:text="Save"
-        android:textColor="@color/blue_bg"
-        android:textSize="25dp"
-        />
+        android:gravity="center"
+        android:layout_marginBottom="30dp"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="High"
+            android:textColor="@color/blue_bg"
+            android:layout_marginRight="10dp"
+            android:textSize="25dp"
+            />
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_trending_up_svgrepo_com"/>
+    </LinearLayout>
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/low_btn"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/login_register_btn_bg"
+        android:paddingVertical="8dp"
+        android:gravity="center"
+        android:layout_marginBottom="30dp"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Low"
+            android:textColor="@color/blue_bg"
+            android:layout_marginRight="10dp"
+            android:textSize="25dp"
+            />
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_trending_down_svgrepo_com"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/current_high_notification"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:gravity="center_vertical"
+        android:visibility="gone"
+        android:orientation="horizontal"
+>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Higher Price Notification :"
+            android:textSize="20dp"
+            android:layout_marginRight="10dp"
+            android:textColor="@color/blue_price"/>
+        <TextView
+            android:id="@+id/current_high_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:textColor="@color/white"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:text="$"/>
+        <ImageView
+            android:id="@+id/notification_delete_higher_price"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_baseline_delete_24"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/current_low_notification"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Higher Price Notification :"
+            android:textSize="20dp"
+            android:layout_marginRight="10dp"
+            android:textColor="@color/blue_price"/>
+        <TextView
+            android:id="@+id/current_low_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:textColor="@color/white"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:text="$"/>
+        <ImageView
+            android:id="@+id/notification_delete_lower_price"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_baseline_delete_24"/>
+    </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

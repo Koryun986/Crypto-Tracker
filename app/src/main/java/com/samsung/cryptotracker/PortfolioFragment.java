@@ -64,6 +64,7 @@ public class PortfolioFragment extends Fragment {
     private final String portfolioFirebase = "portfolio";
     private final String priceFirebase = "price";
     private final String countFirebase = "count";
+    private final String FORMAT_PATTERN = "#0.00";
 
     private FirebaseAuth auth;
     private FirebaseUser user;
@@ -104,11 +105,12 @@ public class PortfolioFragment extends Fragment {
         ref.child(user.getUid()).child(portfolioFirebase).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String defaultMoney = "0";
                 if (snapshot.exists()) {
                     progressBar.setVisibility(View.VISIBLE);
                     dollarChar.setVisibility(View.VISIBLE);
-                    portfolioProfit.setText("0");
-                    portfolioMoney.setText("0");
+                    portfolioProfit.setText(defaultMoney);
+                    portfolioMoney.setText(defaultMoney);
                     String coins = "";
                     for (DataSnapshot snap : snapshot.getChildren()) {
                         String coinId = snap.getKey();
@@ -124,7 +126,7 @@ public class PortfolioFragment extends Fragment {
                             arr);
 
                     listView.setAdapter(listAdapter);
-                    portfolioMoney.setText("0");
+                    portfolioMoney.setText(defaultMoney);
                 }
             }
 
@@ -191,7 +193,7 @@ public class PortfolioFragment extends Fragment {
     private void setPortfolioMoney (Double money, Double profit) {
         Double currentMoney = Double.valueOf(portfolioMoney.getText().toString());
         Double finalMoney = money + currentMoney;
-        DecimalFormat dec = new DecimalFormat("#0.00");
+        DecimalFormat dec = new DecimalFormat(FORMAT_PATTERN);
         Double currentProfit = Double.valueOf((portfolioProfit.getText().toString()));
         Double finalPorfit = currentProfit + profit;
         portfolioMoney.setText(String.valueOf(dec.format(finalMoney)));

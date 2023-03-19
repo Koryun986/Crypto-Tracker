@@ -25,6 +25,10 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class ProfileFragment extends Fragment {
 
+    private static final String ALERT_MESSAGE = "Are you sure you want delete your account?";
+    private static final String ALERT_TOAST_MESSAGE = "Deleted User Successfully!";
+    private static final String ALERT_CANCEL = "Cancel";
+    private static final String ALERT_DELETE_ACCOUNT = "Delete Account";
 
     public static ProfileFragment newInstance() {
         ProfileFragment fragment = new ProfileFragment();
@@ -96,15 +100,15 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 new AlertDialog.Builder(getContext())
-                        .setMessage("Are you sure you want delete your account?")
+                        .setMessage(ALERT_MESSAGE)
                         .setCancelable(false)
-                        .setPositiveButton("Delete Account", new DialogInterface.OnClickListener() {
+                        .setPositiveButton(ALERT_DELETE_ACCOUNT, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-                                        Toast.makeText(getActivity(), "Deleted User Successfully!", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getActivity(), ALERT_TOAST_MESSAGE, Toast.LENGTH_SHORT).show();
                                         Intent intent = new Intent(getActivity(), LoginActivity.class);
                                         startActivity(intent);
                                         getActivity().finish();
@@ -112,7 +116,7 @@ public class ProfileFragment extends Fragment {
                                 });
                             }
                         })
-                        .setNegativeButton("Cancel", null)
+                        .setNegativeButton(ALERT_CANCEL, null)
                         .show();
             }
         });
