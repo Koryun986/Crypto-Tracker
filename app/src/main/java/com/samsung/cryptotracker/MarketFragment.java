@@ -140,7 +140,6 @@ public class MarketFragment extends Fragment {
                     case R.id.favorites:
                         Intent intent = new Intent(getContext(), FavoritesActivity.class);
                         startActivity(intent);
-                        getActivity().finish();
                         break;
                     default:
                         break;
@@ -203,16 +202,6 @@ public class MarketFragment extends Fragment {
         return view;
     }
 
-
-    class Loader extends Thread{
-
-        @Override
-        public void run() {
-            super.run();
-            marketInfoViewModel.loadData();
-
-        }
-    }
 
 
     private void loadJsonFromUrlSearchView(String url, String name) {

@@ -2,6 +2,8 @@ package com.samsung.cryptotracker;
 
 import static com.samsung.cryptotracker.Constants.getArrayListFromJSONArray;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,8 +12,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -32,6 +36,8 @@ import java.util.List;
 public class MarketsPriceFragment extends Fragment {
 
     private static final String ARG_PARAM = "id";
+    private final String TRADE_URL = "trade_url";
+    private final String TOAST_MESSAGE = "Sorry this exchange is not avaliable";
 
     private String id;
 
@@ -80,6 +86,24 @@ public class MarketsPriceFragment extends Fragment {
                 swipeRefreshLayout.setRefreshing(true);
             }else {
                 swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                List<JSONObject> list = marketsPriceViewModel.getData().getValue();
+                JSONObject obj = list.get(i);
+                try {
+                    String url = obj.getString(TRADE_URL);
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(url));
+                    startActivity(intent);
+                } catch (JSONException e) {
+                    Toast.makeText(getContext(), TOAST_MESSAGE, Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+
             }
         });
 
