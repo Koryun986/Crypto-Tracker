@@ -140,7 +140,7 @@ public class MarketFragment extends Fragment {
                     case R.id.favorites:
                         Intent intent = new Intent(getContext(), FavoritesActivity.class);
                         startActivity(intent);
-                        break;
+                            break;
                     default:
                         break;
                 }

@@ -10,8 +10,39 @@
        android:id="@+id/progress_bar"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
+       android:foregroundGravity="center"
        android:visibility="gone"
        android:layout_gravity="center_horizontal"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/blue_dark"
+        android:orientation="horizontal"
+        >
+        <TextView
+            android:id="@+id/all_exchanges"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="All Exchanges"
+            android:paddingLeft="16dp"
+            android:paddingVertical="10dp"
+            android:background="@color/gray_logo"
+            android:textColor="@color/blue_bg"
+            android:textSize="20dp"/>
+        <TextView
+            android:id="@+id/max_min"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingRight="16dp"
+            android:paddingVertical="10dp"
+            android:text="Max and Min"
+            android:gravity="right"
+            android:textColor="@color/blue_price"
+            android:textSize="20dp"/>
+    </LinearLayout>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
     android:id="@+id/swipe_refresh_layout"
@@ -23,5 +54,124 @@
         android:layout_height="wrap_content" />
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <LinearLayout
+        android:id="@+id/max_min_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="10dp"
+            android:gravity="center"
+            android:paddingHorizontal="16dp">
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:popupBackground="@color/blue_dark"
+                android:spinnerMode="dropdown"
+                />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/blue_price"
+            android:layout_marginVertical="20dp"
+            android:textSize="20dp"
+            android:text="Max Price"/>
+
+        <LinearLayout
+            android:id="@+id/max_price_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@color/blue_dark"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="10dp"
+            android:gravity="center_vertical">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                >
+                <ImageView
+                    android:id="@+id/market_logo_max"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginRight="20dp"/>
+                <TextView
+                    android:id="@+id/market_name_max"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20dp"
+                    android:textColor="@color/blue_price"
+                    />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/market_price_max"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="17dp"
+                android:textColor="@color/blue_price"
+                android:layout_weight="1"
+                android:gravity="right"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/blue_price"
+            android:layout_marginVertical="20dp"
+            android:textSize="20dp"
+            android:text="Min Price"/>
+
+        <LinearLayout
+            android:id="@+id/min_price_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@color/blue_dark"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="10dp"
+            android:gravity="center_vertical">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                >
+                <ImageView
+                    android:id="@+id/market_logo_min"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginRight="20dp"/>
+                <TextView
+                    android:id="@+id/market_name_min"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20dp"
+                    android:textColor="@color/blue_price"
+                    />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/market_price_min"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="17dp"
+                android:textColor="@color/blue_price"
+                android:layout_weight="1"
+                android:gravity="right"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
 
 </LinearLayout>
