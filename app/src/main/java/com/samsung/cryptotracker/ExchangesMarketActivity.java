@@ -28,11 +28,15 @@ public class ExchangesMarketActivity extends AppCompatActivity {
 
     ExchangesMarketViewModel exchangesMarketViewModel;
 
+    private static final String idParam = "id";
+    private static final String ALERT_MESSAGE = "Oops Page Note Found";
+    private static final String ALERT_CANCEL = "Cancel";
+
     private String id;
-    private String RESPONSE_MARKET = "market";
-    private String RESPONSE_MARKET_NAME = "name";
-    private String RESPONSE_MARKET_LOGO = "logo";
-    private String TRADE_URL = "trade_url";
+    private final String RESPONSE_MARKET = "market";
+    private final String RESPONSE_MARKET_NAME = "name";
+    private final String RESPONSE_MARKET_LOGO = "logo";
+    private final String TRADE_URL = "trade_url";
 
     ImageView backBtn;
     ImageView exchangesLogo;
@@ -47,7 +51,7 @@ public class ExchangesMarketActivity extends AppCompatActivity {
 
         Bundle extra = getIntent().getExtras();
         if (extra != null) {
-            id = extra.getString("id");
+            id = extra.getString(idParam);
         }
 
         exchangesMarketViewModel = new ExchangesMarketViewModel(getApplication());
@@ -67,8 +71,15 @@ public class ExchangesMarketActivity extends AppCompatActivity {
             }
         });
 
+        exchangesMarketViewModel.isDataLoaded().observe(this, isLoaded -> {
+            if (isLoaded){
+                swipeRefreshLayout.setRefreshing(true);
+            }else {
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
         exchangesMarketViewModel.getData().observe(this, data -> {
-            swipeRefreshLayout.setRefreshing(true);
             if (data != null) {
                 List<JSONObject> list = data;
                 try {
@@ -82,8 +93,8 @@ public class ExchangesMarketActivity extends AppCompatActivity {
             }else {
                 AlertDialog.Builder builder =
                         new AlertDialog.Builder(this).
-                                setMessage("Oops Page Note Found").
-                                setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
+                                setMessage(ALERT_MESSAGE).
+                                setPositiveButton(ALERT_CANCEL, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
@@ -92,7 +103,6 @@ public class ExchangesMarketActivity extends AppCompatActivity {
                                 });
                 builder.create().show();
             }
-            swipeRefreshLayout.setRefreshing(false);
         });
 
         exchangesMarketViewModel.loadData(id);

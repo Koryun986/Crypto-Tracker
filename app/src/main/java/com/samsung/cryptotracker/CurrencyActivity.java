@@ -8,6 +8,8 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -53,6 +55,8 @@ import java.util.ArrayList;
 
 public class CurrencyActivity extends AppCompatActivity {
 
+    private static final String argId = "id";
+
     CurrencyInfoViewModel currencyInfoViewModel;
 
     ImageView icon;
@@ -71,22 +75,29 @@ public class CurrencyActivity extends AppCompatActivity {
 
         Bundle extra = getIntent().getExtras();
         if (extra != null) {
-            id = extra.getString("id");
+            id = extra.getString(argId);
         }
         Fragment chartFragment = new CurrencyChartFragment();
         Fragment marketsPriceFragment = new MarketsPriceFragment();
+        Fragment currencyNotifications = new NotificationsFragment();
 
         Bundle args = new Bundle();
         args.putString("id", id);
         chartFragment.setArguments(args);
         marketsPriceFragment.setArguments(args);
+        currencyNotifications.setArguments(args);
 
         currencyInfoViewModel.getData().observe(this, data -> {
-            try {
-                Picasso.get().load(data.get(0).getString(Constants.CURRENCY_IMAGE)).into(icon);
-                name.setText(data.get(0).getString(Constants.CURRENCY_NAME));
-            } catch (JSONException e) {
-                e.printStackTrace();
+            if(data != null) {
+                try {
+                    JSONObject obj = data.get(0);
+                    Picasso.get().load(obj.getString(Constants.CURRENCY_IMAGE)).into(icon);
+                    name.setText(obj.getString(Constants.CURRENCY_NAME));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }else {
+
             }
         });
         currencyInfoViewModel.loadCurrencyData(id);
@@ -95,8 +106,7 @@ public class CurrencyActivity extends AppCompatActivity {
         name = findViewById(R.id.coin_name);
         backButton = findViewById(R.id.back_button);
 
-//        Loader loader = new Loader();
-//        loader.start();
+
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment, chartFragment)
                 .commit();
@@ -120,45 +130,14 @@ public class CurrencyActivity extends AppCompatActivity {
                         ft.replace(R.id.fragment, marketsPriceFragment);
                         ft.commit();
                         break;
-
+                    case R.id.currency_notifications:
+                        ft.replace(R.id.fragment, currencyNotifications);
+                        ft.commit();
+                        break;
                 }
                 return false;
             }
         });
     }
 
-
-
-    class Loader extends Thread {
-        @Override
-        public void run() {
-            super.run();
-            String url = Constants.CURRENCY_URL(id);
-            loadCurrencyData(url);
-
-        }
-    }
-        private void loadCurrencyData (String url) {
-            StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            try {
-                                JSONArray jsonArray = new JSONArray(response);
-                                data = getArrayListFromJSONArray(jsonArray);
-                                Picasso.get().load(data.get(0).getString(Constants.CURRENCY_IMAGE)).into(icon);
-                                name.setText(data.get(0).getString(Constants.CURRENCY_NAME));
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    error.printStackTrace();
-                }
-            });
-            RequestQueue requestQueue = Volley.newRequestQueue(this);
-            requestQueue.add(stringRequest);
-        }
 }

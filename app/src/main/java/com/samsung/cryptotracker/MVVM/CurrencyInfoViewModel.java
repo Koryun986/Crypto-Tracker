@@ -28,17 +28,22 @@ import java.util.List;
 
 public class CurrencyInfoViewModel extends AndroidViewModel {
     private MutableLiveData<List<JSONObject>> mutableLiveData;
+    private MutableLiveData<Boolean> isLoaded;
 
     public CurrencyInfoViewModel(@NonNull Application application) {
         super(application);
+        isLoaded = new MutableLiveData<>();
         mutableLiveData = new MutableLiveData<>();
     }
 
     public LiveData<List<JSONObject>> getData(){
         return  mutableLiveData;
     }
+    public LiveData<Boolean> isInfoLoaded() { return isLoaded; }
+
 
     public void loadCurrencyData(String id){
+        isLoaded.setValue(true);
         String url = Constants.CURRENCY_URL(id);
         AsyncTask.execute(() -> {
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -46,6 +51,7 @@ public class CurrencyInfoViewModel extends AndroidViewModel {
                         @Override
                         public void onResponse(String response) {
                             try {
+                                isLoaded.setValue(false);
                                 JSONArray jsonArray = new JSONArray(response);
                                 ArrayList<JSONObject> data = getArrayListFromJSONArray(jsonArray);
                                 mutableLiveData.postValue(data);
@@ -57,6 +63,8 @@ public class CurrencyInfoViewModel extends AndroidViewModel {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     error.printStackTrace();
+                    mutableLiveData.setValue(null);
+                    isLoaded.setValue(false);
                 }
             });
             RequestQueue requestQueue = Volley.newRequestQueue(getApplication());

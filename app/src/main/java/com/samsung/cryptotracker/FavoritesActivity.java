@@ -6,6 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -45,6 +47,9 @@ import java.util.List;
 import java.util.Locale;
 
 public class FavoritesActivity extends AppCompatActivity {
+    private static final String idArg = "id";
+
+
     private FirebaseDatabase database;
     private DatabaseReference ref;
     private FirebaseAuth auth;
@@ -74,14 +79,33 @@ public class FavoritesActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
 
+        favoritesViewModel.isInfoLoaded().observe(this, isLoaded -> {
+            if (isLoaded) {
+                swipeRefreshLayout.setRefreshing(true);
+            }else {
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
 
         favoritesViewModel.getData().observe(this, data -> {
-            swipeRefreshLayout.setRefreshing(true);
             if (data != null) {
                 ListAdapter listAdapter = new ListViewAdapter(getApplication(), R.layout.row, R.id.container, (ArrayList<JSONObject>) data);
                 listView.setAdapter(listAdapter);
+            }else {
+                AlertDialog.Builder builder =
+                        new AlertDialog.Builder(this).
+                                setMessage("Oops Page Note Found").
+                                setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                        finish();
+                                    }
+                                });
+                builder.create().show();
             }
-            swipeRefreshLayout.setRefreshing(false);
+
         });
 
 
@@ -100,7 +124,7 @@ public class FavoritesActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 TextView id = view.findViewById(R.id.coin_id);
                 Intent intent = new Intent(getApplicationContext(), CurrencyActivity.class);
-                intent.putExtra("id", id.getText());
+                intent.putExtra(idArg, id.getText());
                 startActivity(intent);
             }
         });
@@ -141,7 +165,7 @@ public class FavoritesActivity extends AppCompatActivity {
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                DataSnapshot favorites = snapshot.child(user.getUid()).child("favorites");
+                DataSnapshot favorites = snapshot.child(user.getUid()).child(Constants.FIREBASE_FAVORITES);
                 for (DataSnapshot favCoin: favorites.getChildren()) {
                     String coin = favCoin.getValue(String.class);
                     list.add(coin);

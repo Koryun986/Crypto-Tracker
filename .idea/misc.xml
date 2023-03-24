@@ -21,6 +21,7 @@
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/drawable/ic_logo_blue.xml" value="0.194" />
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/drawable/ic_logo_svg.xml" value="0.194" />
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/drawable/ic_pie_chart_icon.xml" value="0.195" />
+        <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/drawable/ic_trending_down_svgrepo_com.xml" value="0.195" />
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/drawable/ic_wifi_off_svgrepo_com.xml" value="0.195" />
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/drawable/line_chart_gradient.xml" value="0.136" />
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/drawable/line_chart_marker.xml" value="0.2265" />
@@ -51,9 +52,11 @@
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/layout/exchanges_market_row.xml" value="0.22826086956521738" />
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/layout/exchanges_row.xml" value="0.22826086956521738" />
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/layout/fragment_currency_chart.xml" value="0.22826086956521738" />
+        <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/layout/fragment_currency_exchanges.xml" value="0.22826086956521738" />
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/layout/fragment_favorites.xml" value="0.22826086956521738" />
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/layout/fragment_market.xml" value="0.22826086956521738" />
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/layout/fragment_markets_price.xml" value="0.22826086956521738" />
+        <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/layout/fragment_notifications.xml" value="0.22826086956521738" />
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/layout/fragment_portfolio.xml" value="0.27447916666666666" />
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/layout/fragment_profile.xml" value="0.22826086956521738" />
         <entry key="..\:/Users/Lenovo/Documents/CryptoTracker/app/src/main/res/layout/fragment_search.xml" value="0.22826086956521738" />

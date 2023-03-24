@@ -31,17 +31,23 @@ import java.util.List;
 
 public class ChartViewModel extends AndroidViewModel {
     private MutableLiveData<List<Entry>> mutableLiveData;
+    private MutableLiveData<Boolean> isLoaded;
 
     public ChartViewModel(@NonNull Application application) {
         super(application);
+        isLoaded = new MutableLiveData<>();
         mutableLiveData = new MutableLiveData<>();
     }
 
     public LiveData<List<Entry>> getData(){
         return  mutableLiveData;
     }
+    public LiveData<Boolean> isChartLoaded(){
+        return  isLoaded;
+    }
 
     public void loadChartData(String id, int days){
+        isLoaded.setValue(true);
         AsyncTask.execute(() -> {
             String url = Constants.CURRENCY_CHART(id, days);
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -49,6 +55,7 @@ public class ChartViewModel extends AndroidViewModel {
                         @Override
                         public void onResponse(String response) {
                             try {
+                                isLoaded.setValue(false);
                                 JSONObject jsonObject = new JSONObject(response);
                                 ArrayList<Entry> arr = getArr(jsonObject.getJSONArray("prices"));
                                 mutableLiveData.postValue(arr);
@@ -60,6 +67,7 @@ public class ChartViewModel extends AndroidViewModel {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     error.printStackTrace();
+                    isLoaded.setValue(false);
                 }
             });
             RequestQueue requestQueue = Volley.newRequestQueue(getApplication());

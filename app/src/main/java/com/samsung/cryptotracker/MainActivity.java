@@ -36,6 +36,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+ import com.google.android.gms.tasks.OnCompleteListener;
+ import com.google.android.gms.tasks.Task;
  import com.google.android.material.bottomnavigation.BottomNavigationView;
  import com.google.android.material.navigation.NavigationBarView;
  import com.google.firebase.auth.FirebaseAuth;
@@ -45,12 +47,16 @@ import com.android.volley.toolbox.Volley;
  import com.google.firebase.database.DatabaseReference;
  import com.google.firebase.database.FirebaseDatabase;
  import com.google.firebase.database.ValueEventListener;
+ import com.google.firebase.messaging.FirebaseMessaging;
+ import com.google.firebase.messaging.FirebaseMessagingService;
  import com.samsung.cryptotracker.Adapter.ListViewAdapter;
 
 import com.samsung.cryptotracker.Exchange.ExchangedCurrency;
+ import com.samsung.cryptotracker.MVVM.CurrencyInfoViewModel;
+ import com.samsung.cryptotracker.Notification.NotificationSend;
 
 
-import org.json.JSONArray;
+ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -60,10 +66,19 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static String NOTIFICATION_LOW_PRICE (String id, Double price) {
+        return "The price of " + id +" is under " + price + "$";
+    }
+    private static String NOTIFICATION_HIGH_PRICE (String id, Double price) {
+        return "The price of " + id +" is over " + price + "$";
+    }
+
     private FirebaseAuth auth;
     private FirebaseUser user;
     private FirebaseDatabase database;
     private DatabaseReference ref;
+    private String FCM_REGISTRATION_TOKEN = null ;
+    CurrencyInfoViewModel notificationModel;
     BroadcastReceiver broadcastReceiver = null;
     ListView listView;
     BottomNavigationView navigationView;
@@ -75,23 +90,52 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        notificationModel = new CurrencyInfoViewModel(getApplication());
+
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
         listView = findViewById(R.id.list_view);
         navigationView = findViewById(R.id.bottom_navigation_bar);
         user = auth.getCurrentUser();
-        database = FirebaseDatabase.getInstance();;
+        database = FirebaseDatabase.getInstance();
         ref = database.getReference(Constants.FIREBASE_USERS);
 
         broadcastReceiver = new InternetReceiver();
         internetstatus();
 
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+
+                            return;
+                        }
+
+                        // Get new FCM registration token
+                        String token = task.getResult();
+                        FCM_REGISTRATION_TOKEN = token;
+
+                    }
+                });
+
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (!snapshot.child(user.getUid()).exists()) {
+                DataSnapshot userSnap = snapshot.child(user.getUid());
+                if (!userSnap.exists()) {
                     User userClass = new User(user.getEmail());
-                    snapshot.child(user.getUid()).getRef().setValue(userClass);
+                    userSnap.getRef().setValue(userClass);
+                }else {
+                    DataSnapshot notificationsSnap = snapshot.child(user.getUid()).child(Constants.FIREBASE_NOTIFICATIONS);
+                    if (notificationsSnap.exists()){
+                        String coins = "";
+                        for (DataSnapshot snap : notificationsSnap.getChildren()){
+                            coins += "," + snap.getKey();
+                        }
+                        notificationModel.loadCurrencyData(coins);
+
+                    }
                 }
             }
 
@@ -101,6 +145,51 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        notificationModel.getData().observe(this, data -> {
+            if (data != null) {
+                for (JSONObject obj : data){
+                    try {
+                        String id = obj.getString(Constants.CURRENCY_ID);
+                        Double price = obj.getDouble(Constants.CURRENCY_PRICE);
+                        DatabaseReference notificationRef = ref.child(user.getUid()).child(Constants.FIREBASE_NOTIFICATIONS).child(id).getRef();
+                        notificationRef.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if (snapshot.child(Constants.FIREBASE_NOTIFICATIONS_HIGH).exists()) {
+                                    Double messageHighPrice = snapshot.child(Constants.FIREBASE_NOTIFICATIONS_HIGH).getValue(Double.class);
+                                    if (price >= messageHighPrice && messageHighPrice != null) {
+                                        NotificationSend.pushNotification(MainActivity.this,
+                                                FCM_REGISTRATION_TOKEN,
+                                                "Crypto Tracker",
+                                                NOTIFICATION_HIGH_PRICE(id, messageHighPrice)
+                                        );
+                                    }
+                                }
+                                if (snapshot.child(Constants.FIREBASE_NOTIFICATIONS_LOW).exists()){
+                                    Double messageLowPrice = snapshot.child(Constants.FIREBASE_NOTIFICATIONS_LOW).getValue(Double.class);
+                                    if (price <= messageLowPrice && messageLowPrice != null){
+                                        NotificationSend.pushNotification(MainActivity.this,
+                                                FCM_REGISTRATION_TOKEN,
+                                                "Crypto Tracker",
+                                                NOTIFICATION_LOW_PRICE(id, messageLowPrice)
+                                        );
+
+                                    }
+                                }
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
 
         Fragment marketFragment = new MarketFragment();
         Fragment portfolioFragment = new PortfolioFragment();
@@ -143,10 +232,5 @@ public class MainActivity extends AppCompatActivity {
         registerReceiver(broadcastReceiver,new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        unregisterReceiver(broadcastReceiver);
-//    }
 
 }

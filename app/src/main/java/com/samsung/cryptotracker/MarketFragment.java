@@ -2,6 +2,8 @@ package com.samsung.cryptotracker;
 
 import static com.samsung.cryptotracker.Constants.getArrayListFromJSONArray;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -41,6 +43,10 @@ import java.util.Locale;
 
 
 public class MarketFragment extends Fragment {
+
+    private static final String ALERT_MESSAGE = "Oops Page Note Found";
+    private static final String ALERT_CANCEL = "Cancel";
+    private static final String ARG_ID = "id";
 
 
     public MarketFragment() {
@@ -87,13 +93,31 @@ public class MarketFragment extends Fragment {
 
         marketInfoViewModel = new MarketInfoViewModel(getActivity().getApplication()) ;
 
+        marketInfoViewModel.isMarketLoaded().observe(getActivity(), isLoaded -> {
+            if (isLoaded) {
+                swipeRefreshLayout.setRefreshing(true);
+            }else {
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
         marketInfoViewModel.getData().observe(getActivity(), data-> {
-            swipeRefreshLayout.setRefreshing(true);
             if (data != null) {
                 ListAdapter listAdapter = new ListViewAdapter(getActivity(), R.layout.row, R.id.container, (ArrayList<JSONObject>) data);
                 listView.setAdapter(listAdapter);
+            }else {
+                AlertDialog.Builder builder =
+                        new AlertDialog.Builder(getActivity()).
+                                setMessage(ALERT_MESSAGE).
+                                setPositiveButton(ALERT_CANCEL, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                builder.create().show();
             }
-            swipeRefreshLayout.setRefreshing(false);
+
         });
 
         marketInfoViewModel.loadData();
@@ -116,8 +140,7 @@ public class MarketFragment extends Fragment {
                     case R.id.favorites:
                         Intent intent = new Intent(getContext(), FavoritesActivity.class);
                         startActivity(intent);
-                        getActivity().finish();
-                        break;
+                            break;
                     default:
                         break;
                 }
@@ -152,7 +175,7 @@ public class MarketFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 TextView id = view.findViewById(R.id.coin_id);
                 Intent intent = new Intent(getContext(), CurrencyActivity.class);
-                intent.putExtra("id", id.getText());
+                intent.putExtra(ARG_ID, id.getText());
                 startActivity(intent);
             }
         });
@@ -179,16 +202,6 @@ public class MarketFragment extends Fragment {
         return view;
     }
 
-
-    class Loader extends Thread{
-
-        @Override
-        public void run() {
-            super.run();
-            marketInfoViewModel.loadData();
-
-        }
-    }
 
 
     private void loadJsonFromUrlSearchView(String url, String name) {

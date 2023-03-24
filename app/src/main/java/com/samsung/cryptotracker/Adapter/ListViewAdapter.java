@@ -45,6 +45,7 @@ public class ListViewAdapter extends ArrayAdapter<JSONObject> {
     private FirebaseUser user;
     private final String listViewForSearch = "large";
     private final String favoritesFirebase = "favorites";
+    private final String percentSymbol = "%";
     int listLayout;
     ArrayList<JSONObject> obj;
     Context context;
@@ -95,7 +96,7 @@ public class ListViewAdapter extends ArrayAdapter<JSONObject> {
                 Picasso.get().load(obj.get(position).getString(Constants.CURRENCY_IMAGE)).into(icon);
                 coinName.setText(obj.get(position).getString(Constants.CURRENCY_NAME));
                 coinPrice.setText(obj.get(position).getDouble(Constants.CURRENCY_PRICE) + exchangedCurrencySymbol);
-                coinChange.setText(change + "%");
+                coinChange.setText(change + percentSymbol);
                 coinChange.setTextColor(change >= 0 ? ContextCompat.getColor(context, R.color.green) : ContextCompat.getColor(context, R.color.red));
                 favCoin.setBackground(ActivityCompat.getDrawable(context, R.drawable.ic_baseline_favorite_border_24));
 
