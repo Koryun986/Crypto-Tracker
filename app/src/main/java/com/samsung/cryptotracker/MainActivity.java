@@ -155,23 +155,28 @@ public class MainActivity extends AppCompatActivity {
                         notificationRef.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                Double messagePrice = snapshot.child(Constants.FIREBASE_NOTIFICATIONS_HIGH).getValue(Double.class);
-                                if (price >= messagePrice){
-                                    NotificationSend.pushNotification(MainActivity.this,
-                                            FCM_REGISTRATION_TOKEN,
-                                            "Crypto Tracker",
-                                                NOTIFICATION_HIGH_PRICE(id, messagePrice)
-                                            );
-
-
-                                }else if (price <= messagePrice){
-                                    NotificationSend.pushNotification(MainActivity.this,
-                                            FCM_REGISTRATION_TOKEN,
-                                            "Crypto Tracker",
-                                            NOTIFICATION_LOW_PRICE(id, messagePrice)
-                                    );
-
+                                if (snapshot.child(Constants.FIREBASE_NOTIFICATIONS_HIGH).exists()) {
+                                    Double messageHighPrice = snapshot.child(Constants.FIREBASE_NOTIFICATIONS_HIGH).getValue(Double.class);
+                                    if (price >= messageHighPrice && messageHighPrice != null) {
+                                        NotificationSend.pushNotification(MainActivity.this,
+                                                FCM_REGISTRATION_TOKEN,
+                                                "Crypto Tracker",
+                                                NOTIFICATION_HIGH_PRICE(id, messageHighPrice)
+                                        );
+                                    }
                                 }
+                                if (snapshot.child(Constants.FIREBASE_NOTIFICATIONS_LOW).exists()){
+                                    Double messageLowPrice = snapshot.child(Constants.FIREBASE_NOTIFICATIONS_LOW).getValue(Double.class);
+                                    if (price <= messageLowPrice && messageLowPrice != null){
+                                        NotificationSend.pushNotification(MainActivity.this,
+                                                FCM_REGISTRATION_TOKEN,
+                                                "Crypto Tracker",
+                                                NOTIFICATION_LOW_PRICE(id, messageLowPrice)
+                                        );
+
+                                    }
+                                }
+
                             }
 
                             @Override
