@@ -31,7 +31,13 @@ public class Constants {
     public static final String CURRENCY_NAME = "name";
     public static final String CURRENCY_IMAGE = "image";
     public static final String CURRENCY_PRICE = "current_price";
+    public static final String CURRENCY_CHANGE = "price_change_percentage_24h";
+    public static final String CURRENCY_MARKET_CUP = "market_cap";
     public static final String CURRENCY_MARKET_CUP_CHANGE = "market_cap_change_percentage_24h";
+    public static final String CURRENCY_MARKET_CUP_RANK = "market_cap_rank";
+    public static final String CURRENCY_HIGH_24H = "high_24h";
+    public static final String CURRENCY_LOW_24H = "low_24h";
+
     public static final String FIREBASE_USERS = "users";
     public static final String FIREBASE_NOTIFICATIONS = "notifications";
     public static final String FIREBASE_FAVORITES = "favorites";
