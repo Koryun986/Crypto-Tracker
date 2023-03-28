@@ -92,7 +92,7 @@ public class ListViewAdapter extends ArrayAdapter<JSONObject> {
             try {
                 String name = obj.get(position).getString(Constants.CURRENCY_ID);
                 id.setText(name);
-                double change = obj.get(position).getDouble(Constants.CURRENCY_MARKET_CUP_CHANGE);
+                double change = obj.get(position).getDouble(Constants.CURRENCY_CHANGE);
                 Picasso.get().load(obj.get(position).getString(Constants.CURRENCY_IMAGE)).into(icon);
                 coinName.setText(obj.get(position).getString(Constants.CURRENCY_NAME));
                 coinPrice.setText(obj.get(position).getDouble(Constants.CURRENCY_PRICE) + exchangedCurrencySymbol);

@@ -16,8 +16,9 @@
 
     <TextView
         android:id="@+id/coin_count"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:gravity="left"
         android:layout_weight="1"
         android:textColor="@color/blue_price"
         android:textSize="15dp"/>
@@ -25,25 +26,26 @@
         android:id="@+id/coin_icon"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_weight="1"/>
-
-
+        android:gravity="left"
+        android:layout_weight=".5"/>
 
     <TextView
         android:id="@+id/coin_name"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:maxWidth="60dp"
+        android:gravity="left"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="3"
         android:textFontWeight="500"
         android:textSize="20dp"
         android:textColor="@color/blue_price" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_weight="1"
+        android:gravity="left"
+        android:layout_weight="3"
         >
         <TextView
             android:id="@+id/coin_price"
@@ -63,16 +65,18 @@
     </LinearLayout>
     <TextView
         android:id="@+id/coin_change"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textSize="15dp"
-        android:layout_weight="1"/>
+        android:gravity="left"
+        android:layout_weight="2"/>
 
     <ImageView
         android:id="@+id/coin_delete"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_weight="1"
+        android:gravity="right"
         android:src="@drawable/ic_baseline_delete_24"/>
 
 

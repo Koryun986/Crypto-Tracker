@@ -88,12 +88,18 @@ public class CurrencyChartFragment extends Fragment {
 
     TextView price;
     String id;
-    ArrayList<JSONObject> data;
+
     LineChart lineChart;
     TextView button1Day;
     TextView button7Day;
     TextView button1Month;
     TextView button3Month;
+    TextView marketCapRank;
+    TextView marketCapPrice;
+    TextView priceChange24h;
+    TextView marketCapChange24h;
+    TextView highPrice24h;
+    TextView lowPrice24h;
 
     ProgressBar progressBar;
 
@@ -114,6 +120,12 @@ public class CurrencyChartFragment extends Fragment {
         button3Month = view.findViewById(R.id.chart_3m);
         price = view.findViewById(R.id.coin_price);
         lineChart = view.findViewById(R.id.line_chart);
+        marketCapRank = view.findViewById(R.id.market_cap_rank);
+        marketCapPrice = view.findViewById(R.id.market_cap);
+        priceChange24h = view.findViewById(R.id.price_change_24h);
+        marketCapChange24h = view.findViewById(R.id.market_cap_change_24h);
+        highPrice24h = view.findViewById(R.id.high_24h);
+        lowPrice24h = view.findViewById(R.id.low_24h);
 
 
         currencyInfoViewModel.isInfoLoaded().observe(getActivity(), isLoaded -> {
@@ -129,7 +141,7 @@ public class CurrencyChartFragment extends Fragment {
         currencyInfoViewModel.getData().observe(getActivity(), data -> {
             if (data != null) {
                 try {
-                    price.setText(data.get(0).getString(Constants.CURRENCY_PRICE) + "$");
+                    setCurrencyData(data.get(0));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -197,6 +209,17 @@ public class CurrencyChartFragment extends Fragment {
 
 
         return view;
+
+    }
+
+    private void setCurrencyData (JSONObject obj) throws JSONException {
+        price.setText(obj.getString(Constants.CURRENCY_PRICE));
+        marketCapRank.setText(obj.getString(Constants.CURRENCY_MARKET_CUP_RANK));
+        marketCapPrice.setText(obj.getString(Constants.CURRENCY_MARKET_CUP));
+        priceChange24h.setText(obj.getString(Constants.CURRENCY_CHANGE));
+        marketCapChange24h.setText(obj.getString(Constants.CURRENCY_MARKET_CUP_CHANGE));
+        highPrice24h.setText(obj.getString(Constants.CURRENCY_HIGH_24H));
+        lowPrice24h.setText(obj.getString(Constants.CURRENCY_LOW_24H));
 
     }
 
